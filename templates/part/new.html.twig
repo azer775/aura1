@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Part{% endblock %}
+
+{% block body %}
+    <h1>Create new Part</h1>
+
+    {{ include('part/_form.html.twig') }}
+
+    <a href="{{ path('app_part_index') }}">back to list</a>
+{% endblock %}

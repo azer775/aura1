@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectations index{% endblock %}
+
+{% block body %}
+    <h1>Affectations index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date_debut</th>
+                <th>Date_fin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for affectation in affectations %}
+            <tr>
+                <td>{{ affectation.id }}</td>
+                <td>{{ affectation.dateDebut ? affectation.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ affectation.dateFin ? affectation.dateFin|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_affectations_show', {'id': affectation.id}) }}">show</a>
+                    <a href="{{ path('app_affectations_edit', {'id': affectation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_affectations_new') }}">Create new</a>
+{% endblock %}

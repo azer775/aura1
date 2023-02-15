@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Don{% endblock %}
+
+{% block body %}
+    <h1>Don</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ don.id }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ don.montant }}</td>
+            </tr>
+            <tr>
+                <th>Date_Don</th>
+                <td>{{ don.dateDon ? don.dateDon|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_don_index') }}">back to list</a>
+
+    <a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
+
+    {{ include('don/_delete_form.html.twig') }}
+{% endblock %}

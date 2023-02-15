@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Association{% endblock %}
+
+{% block body %}
+    {{ include('don/_form.html.twig') }}
+{% endblock %}
+{#<h1>Association</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ association.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ association.nom }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ association.adresse }}</td>
+            </tr>
+            <tr>
+                <th>Rib</th>
+                <td>{{ association.rib }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ association.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_association_index') }}">back to list</a>
+
+    <a href="{{ path('app_association_edit', {'id': association.id}) }}">edit</a>
+
+    {{ include('association/_delete_form.html.twig') }} #}
