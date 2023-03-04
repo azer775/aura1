@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Technicien{% endblock %}
+
+{% block body %}
+    <h1>Technicien</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ technicien.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ technicien.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ technicien.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Tel</th>
+                <td>{{ technicien.tel }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ technicien.email }}</td>
+            </tr>
+            <tr>
+                <th>Specialite</th>
+                <td>{{ technicien.specialite }}</td>
+            </tr>
+            <tr>
+                <th>Salaire</th>
+                <td>{{ technicien.salaire }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_technicien_index') }}">back to list</a>
+
+    <a href="{{ path('app_technicien_edit', {'id': technicien.id}) }}">edit</a>
+
+    {{ include('technicien/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}New FraisEnergie{% endblock %}
+
+{% block body %}
+    <h1>Create new FraisEnergie</h1>
+
+    {{ include('frais_energie/_form.html.twig') }}
+
+    <a href="{{ path('app_frais_energie_index') }}">back to list</a>
+{% endblock %}

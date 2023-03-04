@@ -1,0 +1,82 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Achat index{% endblock %}
+
+{% block body %}
+    <h1>Achat index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nbr_Piece</th>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for achat in achats %}
+            <tr>
+                <td>{{ achat.id }}</td>
+                <td>{{ achat.nbrPiece }}</td>
+                <td>{{ achat.produit }}</td>
+                <td>{{ achat.prix }}</td>
+                <td>
+                    <a href="{{ path('app_achat_show', {'id': achat.id}) }}">show</a>
+                    <a href="{{ path('app_achat_edit', {'id': achat.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="container">
+    <h1>Statistiques</h1>
+    <canvas id="categories" width="400" height="100"></canvas>
+
+    
+</div>
+        {% block javascripts %}
+
+           
+<script>
+    let categories = document.querySelector("#categories")
+    let categGraph = new Chart(categories, {
+        type: "pie",
+        data: {
+            labels: {{ catnom|raw }},
+            datasets: [{
+                label: "Répartition des catégories",
+                data: {{ nbr|raw }},
+                
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#E7E9ED',
+                '#FF9F40',
+                '#8E5EA2',
+                '#3e95cd',
+                '#8e5ea2',
+                '#3cba9f',
+                '#e8c3b9',
+                '#c45850'
+            ]
+            }]
+            
+        }
+        
+    })
+
+   
+</script>
+{% endblock %}
+
+
+    <a href="{{ path('app_achat_new') }}">Create new</a>
+{% endblock %}

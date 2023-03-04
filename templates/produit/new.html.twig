@@ -1,0 +1,18 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}New Produit{% endblock %}
+
+{% block body %}
+    <h1>Create new Produit</h1>
+<div class="col-sm-12 col-xl-6">
+<div class="bg-light rounded h-100 p-4">
+    {{ include('produit/_form.html.twig') }}
+    {#{form_start(form)}}
+        {{form_label(form.nomProd,'nomProd : ',{'attr':{'class':'form-label'}})}}
+        {{form_widget(form.userName,{'attr':{'class':'form-control'}})}}
+    {{form_end(form)}#}
+
+</div>
+</div>
+    <a href="{{ path('app_produit_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Membre index{% endblock %}
+
+{% block body %}
+    <h1>Membre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>DateNais</th>
+                <th>Tel</th>
+                <th>Adresse</th>
+                <th>Role</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for membre in membres %}
+            <tr>
+                <td>{{ membre.id }}</td>
+                <td>{{ membre.nom }}</td>
+                <td>{{ membre.prenom }}</td>
+                <td>{{ membre.email }}</td>
+                <td>{{ membre.password }}</td>
+                <td>{{ membre.dateNais ? membre.dateNais|date('Y-m-d') : '' }}</td>
+                <td>{{ membre.tel }}</td>
+                <td>{{ membre.adresse }}</td>
+                <td>{{ membre.role }}</td>
+                <td>
+                    <a href="{{ path('app_membre_show', {'id': membre.id}) }}">show</a>
+                    <a href="{{ path('app_membre_edit', {'id': membre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_membre_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                             {% for article in produits %}
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <img src="{{asset(article.produit.image)}}" alt="" size="1">
+                                        <h5>{{ article.produit.nomProd }}</h5>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        {{ article.produit.prix }}
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <a href="{{ path('panier_ajouter', {'id': article.produit.id}) }}" class="primary-btn cart-btn">+</a>
+                                                <input type="text" value="{{ article.quantite}}">
+                                                <a href="{{ path('panier_dim', {'id': article.produit.id}) }}" class="primary-btn cart-btn">-</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="shoping__cart__total">
+                                        {{ article.quantite * article.produit.prix}}
+                                        
+                                    </td>
+                                    <td class="shoping__cart__item__close">
+                                        <a href="{{ path('panier_supprimer', {'id': article.produit.id}) }}">
+                                        <span class="icon_close" ></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                             {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__btns">
+                        <a href="{{ path('app_produit_index') }}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                        <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>
+                            Upadate Cart</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="shoping__continue">
+                        <div class="shoping__discount">
+                            <h5>Discount Codes</h5>
+                            <form action="#">
+                                <input type="text" placeholder="Enter your coupon code">
+                                <button type="submit" class="site-btn">APPLY COUPON</button>
+                            </form>
+                        </div>
+                    </div>
+                 </div>
+                 <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li>Subtotal <span>{{somme}}</span></li>
+                            <li>Total <span>{{somme}}</span></li>
+                        </ul>
+                        <a href="{{ path('app_facture_ajouter') }}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+ {% endblock %}
+ {#<table class="table" >
+        <thead>
+            <tr>
+                <th class="shoping__product">Nom</th>
+                <th>image</th>
+                <th>quantite</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in produits %}
+            <tr>
+                <td>{{ article.produit.id }}</td>
+                <td>{{ article.produit.nomProd }}</td>
+                <td>{{ article.quantite}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>#}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Don{% endblock %}
+
+{% block body %}
+    <h1>Edit Don</h1>
+
+    {{ include('don/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_don_index') }}">back to list</a>
+
+    {{ include('don/_delete_form.html.twig') }}
+{% endblock %}

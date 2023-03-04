@@ -1,0 +1,37 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Part index{% endblock %}
+
+{% block body %}
+    <h1>Part index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for part in parts %}
+            <tr>
+                <td>{{ part.id }}</td>
+                <td>{{ part.montant }}</td>
+                <td>{{ part.date ? part.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_part_show', {'id': part.id}) }}">show</a>
+                    <a href="{{ path('app_part_edit', {'id': part.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_part_new') }}">Create new</a>
+{% endblock %}
