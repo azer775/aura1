@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Affectations;
 use App\Form\AffectationsType;
 use App\Repository\AffectationsRepository;
+use App\Repository\TechnicienRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,11 +15,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class AffectationsController extends AbstractController
 {
     #[Route('/', name: 'app_affectations_index', methods: ['GET'])]
-    public function index(AffectationsRepository $affectationsRepository): Response
+    public function index(AffectationsRepository $affectationsRepository,TechnicienRepository $TechnicienRepository): Response
     {   
-
+        $techs=$TechnicienRepository->findAll();
+        foreach($techs as $t)
+        {
+            $catnom [] =$t->getNom();
+            $nbr [] = $affectationsRepository->countAffectationsForTechnicien($t->getId());
+        }
         return $this->render('affectations/index.html.twig', [
             'affectations' => $affectationsRepository->findAll(),
+            'technom' => json_encode($catnom),
+            'nbr' => json_encode($nbr)
         ]);
     }
     #[Route('/afficher', name: 'app_affectations_afficher', methods: ['GET'])]
@@ -51,10 +59,12 @@ class AffectationsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_affectations_show', methods: ['GET'])]
-    public function show(Affectations $affectation): Response
-    {
+    public function show(Request $request,Affectations $affectation): Response
+    {   $session= $request->getSession();
+        $membre=$session->get('user');
         return $this->render('affectations/show.html.twig', [
             'affectation' => $affectation,
+            'user' => $membre
         ]);
     }
 

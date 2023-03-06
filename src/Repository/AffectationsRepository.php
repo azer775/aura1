@@ -59,6 +59,17 @@ class AffectationsRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
 }
+public function countAffectationsForTechnicien($id): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->join('a.technicien', 't')
+            ->Where('t.id = :technicien')
+            ->setParameter('technicien', $id)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    
 //    /**
 //     * @return Affectation[] Returns an array of Affectation objects
 //     */
