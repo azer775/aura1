@@ -55,11 +55,11 @@
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
                 <img src="{{asset('front/img/language.png')}}" alt="">
-                <div>English</div>
+                <div>options</div>
                 <span class="arrow_carrot-down"></span>
                 <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
+                    <li><a href="#">Mes factures</a></li>
+                    
                 </ul>
             </div>
             <div class="header__top__right__auth">
@@ -182,8 +182,13 @@
                                     <li><a href="#">English</a></li>
                                 </ul>
                             </div>
-                            <div class="header__top__right__auth">
+                            <div class="header__top__right__language">
                                 <a href="#"><i class="fa fa-user"></i> Login</a>
+                                <span class="arrow_carrot-down"></span>
+                                <ul>
+                                    <li><a href="{{path ('app_facture_afficher')}}">Mes Factures</a></li>
+                                    <li><a href="#">Log out</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 //use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,6 +42,30 @@ class ProduitController extends AbstractController
             
         ]);
         
+    }
+    #[Route('/search', name: 'produit_search', methods: ['GET'])]
+    public function search(Request $request,ProduitRepository $produitRepository): JsonResponse
+    {
+        $term = $request->query->get('term');
+
+        $produits = $produitRepository->findAll();
+
+        $results = [];
+        foreach ($produits as $produit) {
+            $results[] = [
+                'id' => $produit->getId(),
+                'nom' => $produit->getNomProd(),
+                'description' => $produit->getDescription(),
+                // ...
+            ];
+        }
+
+        return new JsonResponse($results);
+    }
+    #[Route('/recherche', name: 'produit_recherche')]
+    public function recherche(): Response
+    {
+        return $this->render('produit/recherche.html.twig');
     }
     #[Route('/afficher', name: 'app_produit_afficher', methods: ['GET'])]
     public function afficher(ProduitRepository $produitRepository,CategorieRepository $categorieRepository): Response

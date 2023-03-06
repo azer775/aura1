@@ -38,7 +38,17 @@ class FactureRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function getAchatsPourfacture($Id)
+    {
+        $query = $this->createQueryBuilder('f')
+        ->leftJoin('f.membre', 'm')
+        ->where('m.id = :Id')
+        ->setParameter('Id', $Id);
 
+        $resultat = $query->getQuery()->getResult();
+
+        return $resultat;
+    }
 //    /**
 //     * @return Facture[] Returns an array of Facture objects
 //     */

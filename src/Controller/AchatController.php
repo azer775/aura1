@@ -4,8 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Achat;
 use App\Entity\Membre;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
+use App\Service\PdfService;
 use App\Entity\Facture;
 use App\Form\AchatType;
 use App\Repository\AchatRepository;
@@ -36,7 +35,15 @@ class AchatController extends AbstractController
             'nbr' => json_encode($nbr),
         ]);
     }
-    
+    #[Route('/pdf', name: 'app_achat_pdf', methods: ['GET', 'POST'])]
+    public function generatePdfPersonne(AchatRepository $achatRepository, PdfService $pdf) {
+        $html = $this->render('achat/pdf.html.twig', [
+            'achats' => $achatRepository->findAll(),
+            
+        ]);
+        $pdf->showPdfFile($html);
+        return $this->redirectToRoute('app_facture_afficher', [], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/ajouter', name: 'app_achat_ajouter', methods: ['GET', 'POST'])]
     public function ajouter(Request $request, AchatRepository $achatRepository, FactureRepository $factureRepository,MembreRepository $membreRepository,ProduitRepository $produitRepository): Response
     {

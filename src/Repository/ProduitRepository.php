@@ -38,7 +38,17 @@ class ProduitRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    public function findByNom($value): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.nom_pod LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
+            //->orderBy('p.id', 'ASC')
+            //->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+   }
 //    /**
 //     * @return Produit[] Returns an array of Produit objects
 //     */

@@ -101,10 +101,21 @@ class FactureController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    #[Route('/afficher', name: 'app_facture_afficher', methods: ['GET'])]
+    public function afficher(Request $request, FactureRepository $factureRepository): Response
+    {    $session= $request->getSession();
+        $membre=new Membre();
+        $membre=$session->get('user');
+        $factures=$factureRepository->getAchatsPourfacture($membre->getId());
+        return $this->render('facture/afficher.html.twig', [
+            'factures' => $factures,
+            'user' => $membre
+        ]);
+    }
     #[Route('/{id}', name: 'app_facture_show', methods: ['GET'])]
     public function show(Facture $facture): Response
-    {
+    {   
+        
         return $this->render('facture/show.html.twig', [
             'facture' => $facture,
         ]);

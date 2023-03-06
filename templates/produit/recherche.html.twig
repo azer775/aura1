@@ -1,0 +1,32 @@
+{% block body %}
+    <h1>Recherche de produits</h1>
+
+    <form id="form-recherche">
+        <input type="text" name="term">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <div id="resultats"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#form-recherche').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "{{ path('produit_search') }}",
+                    data: { term: $('input[name="term"]').val() },
+                    success: function(data) {
+                        var html = '';
+                        $.each(data, function(index, produit) {
+                            html += '<div class="produit">';
+                            html += '<h2>' + produit.nom + '</h2>';
+                            html += '<p>' + produit.description + '</p>';
+                            html += '</div>';
+                        });
+                        $('#resultats').html(html);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

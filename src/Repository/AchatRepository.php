@@ -39,19 +39,30 @@ class AchatRepository extends ServiceEntityRepository
         }
     }
     public function getNombreAchatsPourCategorie($categorieId)
-{
-    $query = $this->createQueryBuilder('a')
-        ->select('COUNT(a.id) AS nombre_achats')
-        ->join('a.produit', 'p')
-        ->join('p.categorie', 'c')
-        ->where('c.id = :categorieId')
-        ->setParameter('categorieId', $categorieId)
-        ->getQuery();
+    {
+        $query = $this->createQueryBuilder('a')
+            ->select('COUNT(a.id) AS nombre_achats')
+            ->join('a.produit', 'p')
+            ->join('p.categorie', 'c')
+            ->where('c.id = :categorieId')
+            ->setParameter('categorieId', $categorieId)
+            ->getQuery();
 
-    $resultat = $query->getSingleScalarResult();
+        $resultat = $query->getSingleScalarResult();
 
-    return $resultat;
-}
+        return $resultat;
+    }
+    public function getAchatsPourfacture($factureId)
+    {
+        $query = $this->createQueryBuilder('a')
+        ->leftJoin('a.facture', 'f')
+        ->where('f.id = :factureId')
+        ->setParameter('factureId', $factureId);
+
+        $resultat = $query->getQuery()->getResult();
+
+        return $resultat;
+    }
 //    /**
 //     * @return Achat[] Returns an array of Achat objects
 //     */
