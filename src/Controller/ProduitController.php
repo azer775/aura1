@@ -43,6 +43,27 @@ class ProduitController extends AbstractController
         ]);
         
     }
+    #[Route('/addp', name: 'app_produit_add')]
+    public function add(Request $request, EntityManagerInterface $em): Response
+{
+    $nomProd = $request->query->get('nom_prod');
+    $description = $request->query->get('description');
+    $image = $request->query->get('image');
+    $prix = $request->query->getInt('prix');
+    $nbrProds = $request->query->getInt('nbr_prods');
+
+    $produit = new Produit();
+    $produit->setNomProd($nomProd);
+    $produit->setDescription($description);
+    $produit->setImage($image);
+    $produit->setPrix($prix);
+    $produit->setNbrProds($nbrProds);
+
+    $em->persist($produit);
+    $em->flush();
+
+    return new Response('Produit ajouté avec succès');
+}
     #[Route('/search', name: 'app_post_search', methods: ['GET'])]
    
     public function search(ProduitRepository $postRepository, Request $request): JsonResponse
@@ -88,14 +109,14 @@ class ProduitController extends AbstractController
        die; 
         
     }
-    #[Route('/addp', name: 'app_produit_add')]
+    /* #[Route('/addp', name: 'app_produit_add')]
     public function add(ProduitRepository $repo,SerializerInterface $serializerInterface,Request $request,EntityManagerInterface $em)
     {$content=$request->getContent();
         $data=$serializerInterface->deserialize($content,Produit::class,'json');
         $em->persist($data);
         $em->flush();
         return new Response("success");
-    }
+    } */
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProduitRepository $produitRepository): Response
     {
