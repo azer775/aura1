@@ -1,0 +1,389 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post{% endblock %}
+
+{% block body %}
+    <!-- Blog Details Hero Begin -->
+    <img class="blog-details-hero set-bg" src="{{asset ('front/img/blog/details/details-hero.jpg') }}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="blog__details__hero__text">
+                        <h2>{{post.nom}}</h2>
+                        <ul>
+                            <li>By {{post.Membre}}</li>
+                            <li>{{ post.dateCreation ? post.dateCreation|date('Y-m-d') : '' }}</li>
+                            <li>   {% set commentCount = 0 %}
+                                        {% for comment in post.commentaires %}
+                                        {% set commentCount = commentCount + 1 %}
+                                        {% endfor %}
+
+                                        {{ commentCount }} Comments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Details Hero End -->
+
+    <!-- Blog Details Section Begin -->
+    <section class="blog-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-5 order-md-1 order-2">
+                    <div class="blog__sidebar">
+                       {# <div class="blog__sidebar__search">
+                            <form action="#">
+                                <input type="text" placeholder="Search...">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        </div>#}
+                        <div class="blog__sidebar__item">
+                            <h4>Categories</h4>
+                            <ul>
+                                 <li><a href="#">Objectifs Générales</a></li>
+                                <li><a href="#">Changement climatique</a></li>
+                                <li><a href="#">Énergie renouvelable</a></li>
+                                <li><a href="#">Agriculture durable</a></li>
+                                <li><a href="#">Éducation à l'environnement</a></li>
+                                <li><a href="#">Alimentation saine</a></li>
+                            </ul>
+                        </div>
+                          <div class="blog__sidebar__item">
+                            <h4>Recent News</h4>
+                            <div class="blog__sidebar__recent">
+                              {% for recent in recents %}
+                              <div class="blog__item__t">  
+                               <a href="{{ path('app_post_singlepage', { 'id': recent.id }) }}" >
+                                    <div class="blog__sidebar__recent__item__pic">
+                                         <img src=" {{asset(recent.image)}} " alt="">
+                                    </div>
+                               
+                                        <h6 ><strong>{{ recent.nom }}</strong></h6>
+                                          
+                                       <a class="b"> <span class="fa fa-calendar-o"> {{ recent.dateCreation ? recent.dateCreation|date('Y-m-d') : '' }}</span></a>
+                                    </div>
+                                </a>
+                         
+                               {% endfor %}
+
+                            </div>
+                        </div>
+                        <style>
+                        .b{
+                            color:#b2b2b2;
+                        }
+                         </style>
+                       
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-7 order-md-1 order-1">
+                    <div class="blog__details__text">
+                        <img src="{{asset(post.image)}}" alt="">
+                           <h2> <strong>Thème: {{ post.theme }}</strong></h2>
+                           <br>
+                       
+                        <p>{{ post.contenu }}</p>
+
+                {# {% set ratings = getPostRatings(post)  %} #}
+                <div class="rating-container">
+                   <div class="likes"> <span>  Likes: {{ likes }} </span></div>
+                     <div class="dislikes"> <span>  Dislikes: {{ dislikes }} </span></div>
+</div>
+                 <div class="rating-form-container">
+                     {{ form_start(ratingForm) }}
+                    {{ form_widget(ratingForm.rate) }}
+                    {{ form_row(ratingForm.post) }}
+                    {{ form_row(ratingForm._token) }}
+                    <button type="submit">Submit</button>
+                    {{ form_end(ratingForm) }}
+    </div>
+                    <style> 
+                    .rating-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.likes {
+  margin-right: 10px;
+}
+
+.dislikes {
+  margin-right: 10px;
+}
+
+.likes span,
+.dislikes span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.rating-container button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer; 
+}
+.rating-form-container {
+  margin-top: 20px;
+}
+
+.rating-form-container label {
+  font-weight: bold;
+  margin-right: 19px;
+}
+
+.rating-form-container input[type="radio"] {
+  margin-right: 2px;
+}
+
+.rating-form-container button {
+  margin-top: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+                    </style>
+
+                
+                      <div class="container-comments">
+                    <h2>Comments</h2>
+                     {% if post.commentaires|length > 0 %}
+                      <ul class="comments-list">
+                            {% for comment in post.commentaires %}
+                           <li class="comment-item">
+                                 {{ comment.text }}
+                                  {% if comment.getMembre() == user %}
+                                     
+                                   <a  href="{{ path('comment_updat', {'id': comment.id}) }} " ><button class="commentUpd">Update</button></a>
+                                <a  href="{{ path('comment_delete', {'id': comment.id}) }}" ><button class="commentDEL">Delete</button></a>
+                                 
+                                 {% endif %}
+                            </li>
+                             {% endfor %}
+                     </ul>
+                     {% else %}
+                             <p>No comments yet.</p>
+                      {% endif %}
+                      </div>
+       
+    </script>
+     <div class="comments_form">
+                     
+                     {{ form_start(formComm,{'attr': {'novalidate': 'novalidate'}} ) }}
+                 
+                     {{ form_row(formComm.text, {'label': false}) }}
+                  
+                    <button class="btn_Comment">{{ button_label|default('Comment') }}</button>
+
+                     {{ form_end(formComm) }}
+                     
+                     </div>
+    <script>
+     function displayFlashMessages() {
+  const flashMessages = document.querySelector('#flash-messages');
+  if (flashMessages) {
+    flashMessages.classList.add('show');
+    setTimeout(() => {
+      flashMessages.classList.remove('show');
+    }, 5000);
+  }
+}
+</script>
+{% if app.session.flashbag.peekAll %}
+  <div id="flash-messages">
+    {% for type, messages in app.session.flashbag.all %}
+      {% for message in messages %}
+        <div class="alert alert-{{ type }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if app.request.get('redirected') %}
+  <script>
+    displayFlashMessages();
+  </script>
+{% endif %}
+
+ <style>
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.comment-item {
+    padding: 10px;
+margin-bottom: 10px;
+background-color: #f5f5f5;
+color: #333;
+text-decoration: none;
+border-radius: 5px;
+transition: background-color 0.3s ease;
+box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.comment-text {
+  font-size: 20px;
+  line-height: 1.5;
+}
+ .commentDEL{
+  margin-top: 10px;
+  background-color: #dd2222;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.commentUpd{
+  margin-top: 10px;
+  background-color: #17a2b8;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.comments_form {
+  display: flex;
+    flex-wrap: nowrap; /* changed from "wrap" to "nowrap" */
+   
+    margin-top: 10px;
+}
+
+.comments_form label {
+  font-weight: bold;
+}
+.comments_form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 23px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+  </style>
+                    <div class="blog__details__content">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="blog__details__author">
+                                    <div class="blog__details__author__pic">
+                                        <img src="{{asset ('front/img/blog/details/details-author.jpg') }}" alt="">
+                                    </div>
+                                    <div class="blog__details__author__text">
+                                        <h6>{{post.Membre}}</h6>
+                                        <span>Admin</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="blog__details__widget">
+                                    <ul>
+                                        <li><span>Share With :</span> </li>
+                                    </ul>
+                                    <div class="blog__details__social">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}"><i class="fa fa-facebook"></i></a>
+                                        <a href="https://twitter.com/intent/tweet?url={{ share_url }}"><i class="fa fa-twitter"></i></a>
+                                       
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ share_url }}"><i class="fa fa-linkedin"></i></a>
+                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Details Section End -->
+
+    <!-- Related Blog Section Begin -->
+    <section class="related-blog spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title related-blog-title">
+                        <h2>Post You May Like</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+             {% for mayLike in mayLikes %}
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="blog__item">
+                        <div class="blog__item__pic">
+                            <img src="{{asset (mayLike.image) }}" alt="">
+                        </div>
+                        <div class="blog__item__text">
+                            <ul>
+                                <li><i class="fa fa-calendar-o"></i> {{ mayLike.dateCreation ?  mayLike.dateCreation|date('Y-m-d') : '' }}</li>
+                                <li><i class="fa fa-comment-o"></i> {% set commentCount = 0 %}
+                                        {% for comment in mayLike.commentaires %}
+                                        {% set commentCount = commentCount + 1 %}
+                                        {% endfor %}
+
+                                        {{ commentCount }} </li>
+                            </ul>
+                            <h5><a href="{{ path('app_post_singlepage', {'id': post.id}) }}">{{mayLike.nom}}</a></h5>
+                            <p>Theme : {{mayLike.theme}} </p>
+                        </div>
+                    </div>
+                </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Related Blog Section End -->
+{% endblock %}
+{#<table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Theme</th>
+                <td>{{ post.theme }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ post.image }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ post.contenu }}</td>
+            </tr>
+            <tr>
+                <th>Nbr_Vue</th>
+                <td>{{ post.nbrVue }}</td>
+            </tr>
+            <tr>
+                <th>Date_Creation</th>
+                <td>{{ post.dateCreation ? post.dateCreation|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{{ path('app_post_index') }}">back to list</a>
+
+    <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+    {{ include('post/_delete_form.html.twig') }}
+#}

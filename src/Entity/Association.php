@@ -27,7 +27,7 @@ class Association
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-   #[ORM\OneToMany(mappedBy: 'id_Assoc', targetEntity: Don::class)]
+   #[ORM\OneToMany(mappedBy: 'Association', targetEntity: Don::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $dons;
 
     public function __construct()

@@ -10,7 +10,12 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
+   # App\Service\PerspectiveAPIClient:
+    #    arguments:
+    #        $apiKey: 'AIzaSyA8Gxz0x0J5HdPxrR20-1_gqoj95z-W5S4'
+    #App\Controller\PostController:
+     #   arguments:
+      #      $perspectiveApi: '@App\Service\PerspectiveAPIClient'
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:

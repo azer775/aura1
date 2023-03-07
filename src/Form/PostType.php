@@ -16,7 +16,7 @@ class PostType extends AbstractType
             ->add('image')
             ->add('nom')
             ->add('contenu')
-         //   ->add('nbr_Vue')
+          // ->add('nbr_Vue')
             ->add('date_Creation')
             ->add('Membre')
         ;

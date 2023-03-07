@@ -1,0 +1,45 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Association index{% endblock %}
+
+{% block body %}
+    <h1>Association index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Rib</th>
+                <th>Email</th>
+                 <th>actions</th>
+               {#<th>Dons</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for ass in associations %}
+            <tr>
+                <td>{{ ass.id }}</td>
+                <td>{{ ass.nom }}</td>
+                <td>{{ ass.adresse }}</td>
+                <td>{{ ass.rib }}</td>
+                <td>{{ ass.email }}</td>
+               {#<td>{{ ass.dons }}</td>#} 
+                <td>
+                <a href="{{ path('app_association_show', {'id': ass.id}) }}">show</a>   
+                    <a href="{{ path('app_association_edit', {'id': ass.id}) }}">edit</a>
+                       <a href="{{ path('app_association_delete', {'id': ass.id}) }}">delete</a>  
+                {#    {{ include('association/_delete_form.html.twig') }}#} 
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_association_new') }}">Create new</a>
+{% endblock %}

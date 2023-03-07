@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Facture index{% endblock %}
 
@@ -23,6 +23,7 @@
                 <td>
                     <a href="{{ path('app_facture_show', {'id': facture.id}) }}">show</a>
                     <a href="{{ path('app_facture_edit', {'id': facture.id}) }}">edit</a>
+                     {{ include('facture/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

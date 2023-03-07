@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Categorie index{% endblock %}
 
@@ -21,6 +21,7 @@
                 <td>
                     <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}">show</a>
                     <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">edit</a>
+                     {{ include('categorie/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

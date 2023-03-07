@@ -13,9 +13,10 @@ class CommentaireType extends AbstractType
     {
         $builder
             ->add('text')
-            ->add('date')
-            ->add('post')
-            ->add('membre')
+           // ->add('membre')
+            //->add('date')
+            //->add('post')
+            //->add('membre')
         ;
     }
 

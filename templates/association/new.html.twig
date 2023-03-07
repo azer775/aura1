@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}New Association{% endblock %}
 
@@ -7,5 +7,5 @@
 
     {{ include('association/_form.html.twig') }}
 
-    <a href="{{ path('app_association_index') }}">back to list</a>
+    <a href="{{ path('app_association_affiche') }}">back to list</a>
 {% endblock %}

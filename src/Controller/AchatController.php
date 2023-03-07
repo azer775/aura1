@@ -66,7 +66,7 @@ class AchatController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_achat_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_achat_delete', methods: ['POST'])]
     public function delete(Request $request, Achat $achat, AchatRepository $achatRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$achat->getId(), $request->request->get('_token'))) {

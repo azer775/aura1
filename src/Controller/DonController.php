@@ -66,7 +66,7 @@ class DonController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_don_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_don_delete', methods: ['POST'])]
     public function delete(Request $request, Don $don, DonRepository $donRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$don->getId(), $request->request->get('_token'))) {

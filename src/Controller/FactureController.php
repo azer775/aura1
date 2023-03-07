@@ -66,7 +66,7 @@ class FactureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_facture_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_facture_delete', methods: ['POST'])]
     public function delete(Request $request, Facture $facture, FactureRepository $factureRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$facture->getId(), $request->request->get('_token'))) {

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Don index{% endblock %}
 
@@ -23,6 +23,7 @@
                 <td>
                     <a href="{{ path('app_don_show', {'id': don.id}) }}">show</a>
                     <a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
+                     {{ include('don/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

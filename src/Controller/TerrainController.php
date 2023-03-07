@@ -66,7 +66,7 @@ class TerrainController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_terrain_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_terrain_delete', methods: ['POST'])]
     public function delete(Request $request, Terrain $terrain, TerrainRepository $terrainRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$terrain->getId(), $request->request->get('_token'))) {

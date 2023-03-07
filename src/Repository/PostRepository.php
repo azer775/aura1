@@ -5,6 +5,10 @@ namespace App\Repository;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use DateTimeInterface;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
+
 
 /**
  * @extends ServiceEntityRepository<Post>
@@ -16,9 +20,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostRepository extends ServiceEntityRepository
 {
+   
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
+      
     }
 
     public function save(Post $entity, bool $flush = false): void
@@ -38,6 +44,67 @@ class PostRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findPopularPosts()
+{
+    $entityManager = $this->getEntityManager();
+
+    $query = $entityManager->createQuery(
+        'SELECT p, COUNT(r) as HIDDEN rating_count, SUM(CASE r.rate WHEN 1 THEN 1 ELSE -1 END) as HIDDEN score
+         FROM App\Entity\Post p
+         LEFT JOIN p.ratings r
+         GROUP BY p.id
+         ORDER BY score DESC'
+    );
+
+    return $query->getResult();
+}
+
+public function getCommentsStats()
+{
+    $qb = $this->createQueryBuilder('p')
+        ->select('p.nom', 'COUNT(c.id) as commentsCount')
+        ->leftJoin('p.commentaires', 'c')
+        ->groupBy('p.id')
+        ->getQuery();
+
+    return $qb->getResult();
+}
+
+
+
+// ...
+
+public function createQueryBuilderForSearch(string $query = null, string $date = null): QueryBuilder
+{
+    $qb = $this->createQueryBuilder('p');
+
+    if ($query !== null) {
+        $qb->andWhere('p.nom LIKE :query')
+            ->setParameter('query', '%'.$query.'%');
+    }
+
+    if ($date !== null) {
+        $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
+        if ($dateObj !== false) {
+            $qb->andWhere('p.date_Creation >= :date AND p.date_Creation <= :endDate')
+                ->setParameter('date', $dateObj->format('Y-m-d 00:00:00'))
+                ->setParameter('endDate', $dateObj->format('Y-m-d 23:59:59'));
+        }
+    }
+
+    return $qb;
+}
+
+
+
+
+
+
+/**
+ * @param string $query
+ * @param DateTimeInterface|null $date
+ * @return PaginationInterface
+ */
 
 //    /**
 //     * @return Post[] Returns an array of Post objects

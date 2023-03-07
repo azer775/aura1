@@ -27,10 +27,10 @@ class Terrain
    /* #[ORM\ManyToOne(inversedBy: 'terrains')]
     private ?Partenaire $id_partenaire = null;*/
 
-    #[ORM\OneToMany(mappedBy: 'id_terrain', targetEntity: Part::class,cascade:["remove"], orphanRemoval:true)]
+    #[ORM\OneToMany(mappedBy: 'terrain', targetEntity: Part::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $parts;
 
-    #[ORM\OneToMany(mappedBy: 'terrain_id', targetEntity: Affectations::class,cascade:["remove"], orphanRemoval:true)]
+    #[ORM\OneToMany(mappedBy: 'terrain', targetEntity: Affectations::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $affectations;
 
     #[ORM\ManyToOne(inversedBy: 'terrains')]

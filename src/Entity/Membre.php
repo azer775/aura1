@@ -37,7 +37,7 @@ class Membre
     #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_Membre', targetEntity: Don::class,cascade:["remove"], orphanRemoval:true)]
+    #[ORM\OneToMany(mappedBy: 'Membre', targetEntity: Don::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $dons;
 
     #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Commentaire::class,cascade:["remove"], orphanRemoval:true)]
@@ -61,6 +61,9 @@ class Membre
     #[ORM\OneToMany(mappedBy: 'Membre', targetEntity: Terrain::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $terrains;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Rating::class,cascade:["remove"], orphanRemoval:true)]
+    private Collection $ratings;
+
     public function __construct()
     {
         $this->dons = new ArrayCollection();
@@ -70,6 +73,7 @@ class Membre
         $this->fraisEnergies = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->terrains = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +385,36 @@ class Membre
             // set the owning side to null (unless already changed)
             if ($terrain->getMembre() === $this) {
                 $terrain->setMembre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getMembre() === $this) {
+                $rating->setMembre(null);
             }
         }
 

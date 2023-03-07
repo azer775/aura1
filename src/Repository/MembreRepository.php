@@ -38,6 +38,17 @@ class MembreRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function verif($value,$password): ?Membre
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.email = :email')
+            ->andWhere('m.password = :password')
+           ->setParameter('email', $value)
+           ->setParameter('password', $password)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+   }
 
 //    /**
 //     * @return Membre[] Returns an array of Membre objects

@@ -21,7 +21,7 @@ class Part
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'parts')]
-    private ?Terrain $id_terrain = null;
+    private ?Terrain $terrain = null;
 
     public function getId(): ?int
     {
@@ -54,12 +54,12 @@ class Part
 
     public function getIdTerrain(): ?Terrain
     {
-        return $this->id_terrain;
+        return $this->terrain;
     }
 
     public function setIdTerrain(?Terrain $id_terrain): self
     {
-        $this->id_terrain = $id_terrain;
+        $this->terrain = $id_terrain;
 
         return $this;
     }

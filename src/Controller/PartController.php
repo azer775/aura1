@@ -66,7 +66,7 @@ class PartController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_part_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_part_delete', methods: ['POST'])]
     public function delete(Request $request, Part $part, PartRepository $partRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$part->getId(), $request->request->get('_token'))) {

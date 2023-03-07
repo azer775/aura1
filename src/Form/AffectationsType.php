@@ -14,8 +14,8 @@ class AffectationsType extends AbstractType
         $builder
             ->add('date_debut')
             ->add('date_fin')
-            ->add('technicien_id')
-            ->add('terrain_id')
+            ->add('technicien')
+            ->add('terrain')
         ;
     }
 

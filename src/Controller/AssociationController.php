@@ -14,10 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class AssociationController extends AbstractController
 {
     #[Route('/', name: 'app_association_index', methods: ['GET'])]
-    public function index(AssociationRepository $associationRepository): Response
+    public function index(Request $request,AssociationRepository $associationRepository): Response
     {
+        $session= $request->getSession();
+        $membre=$session->get('user');
         return $this->render('association/index.html.twig', [
             'associations' => $associationRepository->findAll(),
+            'user' => $membre
         ]);
     }
 
@@ -31,7 +34,7 @@ class AssociationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $associationRepository->save($association, true);
 
-            return $this->redirectToRoute('app_association_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_association_affiche', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('association/new.html.twig', [
@@ -40,7 +43,7 @@ class AssociationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_association_show', methods: ['GET'])]
+   #[Route('association/{id}', name: 'app_association_show', methods: ['GET'])]
     public function show(Association $association): Response
     {
         return $this->render('association/show.html.twig', [
@@ -57,7 +60,7 @@ class AssociationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $associationRepository->save($association, true);
 
-            return $this->redirectToRoute('app_association_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_association_affiche', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('association/edit.html.twig', [
@@ -66,13 +69,24 @@ class AssociationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_association_delete', methods: ['POST'])]
+    #[Route('association/{id}', name: 'app_association_delete', methods: ['POST'])]
     public function delete(Request $request, Association $association, AssociationRepository $associationRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$association->getId(), $request->request->get('_token'))) {
             $associationRepository->remove($association, true);
         }
 
-        return $this->redirectToRoute('app_association_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_association_affiche', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/aff', name: 'app_association_affiche', methods: ['GET'])]
+    public function aff(Request $request,AssociationRepository $associationRepository): Response
+    {
+        $session= $request->getSession();
+        $membre=$session->get('user');
+        return $this->render('association/affiche.html.twig', [
+            'associations' => $associationRepository->findAll(),
+            'user' => $membre
+        ]);
+    }
+
 }

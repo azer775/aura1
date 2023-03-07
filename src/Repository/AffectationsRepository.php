@@ -38,6 +38,27 @@ class AffectationsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findByExampleField($value): array
+    {
+         return $this->createQueryBuilder('a')
+             ->andWhere('a.exampleField = :val')
+             ->setParameter('val', $value)
+             ->orderBy('a.id', 'ASC')
+             ->setMaxResults(10)
+             ->getQuery()
+             ->getResult()
+         ;
+     }
+     public function findByMembre($membreId)
+    {
+     return $this->createQueryBuilder('a')
+         ->join('a.terrain', 't')
+         ->join('t.Membre', 'm')
+         ->andWhere('m.id = :membreId')
+         ->setParameter('membreId', $membreId)
+         ->getQuery()
+         ->getResult();
+ }
 
 //    /**
 //     * @return Affectation[] Returns an array of Affectation objects

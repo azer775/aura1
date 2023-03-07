@@ -6,8 +6,10 @@ use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Repository\CommentaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/commentaire')]
@@ -40,7 +42,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_commentaire_show', methods: ['GET'])]
+    #[Route('cmnts/{id}', name: 'app_commentaire_show', methods: ['GET'])]
     public function show(Commentaire $commentaire): Response
     {
         return $this->render('commentaire/show.html.twig', [
@@ -66,7 +68,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_commentaire_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, CommentaireRepository $commentaireRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commentaire->getId(), $request->request->get('_token'))) {
@@ -75,4 +77,42 @@ class CommentaireController extends AbstractController
 
         return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/listeCmntsJson', name: 'app_cmnt_listeCmnts', methods: ['GET'])]
+    public function getComments(CommentaireRepository $cmntRepository, SerializerInterface $serializer): Response
+{
+    $cmnts = $cmntRepository->findAll();
+    $json = $serializer->serialize($cmnts,'json',['groups' => 'cmnts']);
+    dump($json);
+    die;
+}
+  /*  #[Route('/addCommentJson', name: 'app_cmnt_addJSON', methods: ['GET','POST'])]
+    public function addCmnts(Request $request, SerializerInterface $serializer, EntityManagerInterface $em): Response
+    {
+        $content = $request->getContent();
+        $data = $serializer->deserialize($content,Commentaire::class,'json');
+        $em->persist($data);
+        $em->flush();
+        return new Response("Comment added successfully");
+    
+    }
+*/
+#[Route('/addCommentJson', name: 'app_cmnt_addJSON', methods: ['GET','POST'])]
+public function addCmnts(Request $request,EntityManagerInterface $em): Response
+{
+   
+    $Cmntr = new Commentaire();
+    $text = $request->query->get("text");
+    $date = new \DateTime('now');
+
+    $Cmntr->setText($text);
+
+    $Cmntr->setDate($date);
+
+    $em->persist($Cmntr);
+    $em->flush();
+
+    return $this->json($Cmntr,200,[],['groups'=>'cmnts']);
+
+
+}
 }

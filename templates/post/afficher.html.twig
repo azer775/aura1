@@ -1,0 +1,75 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Post index{% endblock %}
+
+{% block body %}
+    <h1>Post index</h1>
+     
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Theme</th>
+                <th>Image</th>
+               {#<th>Contenu</th>#} 
+             {#<th>Nbr_Vue</th>#}   
+                 <th>Date</th>
+                <th>Likes</th>
+                 <th>Dislikes</th>
+                 <th>Comments</th>
+                <th>Actions</th>
+               {#<th>Dons</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+                    {% set ratings = post.getRatings() %} 
+            {% set totalLikes = 0 %} 
+            {% set totalDisLikes = 0 %} 
+
+            {% for rating in ratings %}
+                {% if rating.getRate() == 1 %}
+                    {% set totalLikes = totalLikes + 1 %}
+                {% elseif rating.getRate() == -1 %}
+                    {% set totalDisLikes = totalDisLikes + 1 %}
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td class="tddd">{{ post.id }}</td>
+                <td class="tddd">{{ post.nom }}</td>
+                <td class="tddd">{{ post.theme }}</td>
+                <td class="tddd"> <img class="brrr" src="{{asset(post.image)}}" alt="" ></td>
+                 <td class="tddd">{{ post.getDateCreation() ? post.getDateCreation() | date('Y-m-d') : ''}}</td>
+               {#<td>{{ post.contenu }}</td>#} 
+           {#  <td>{{ post.nbr_Vue }}</td>  #}
+
+          <td class="tddd"> {{totalLikes}} </td>
+                <td class="tddd">{{totalDisLikes}}</td> 
+                 <td class="tddd">
+                  {% set commentCount = 0 %}
+                                        {% for comment in post.commentaires %}
+                                        {% set commentCount = commentCount + 1 %}
+                                        {% endfor %}
+
+                                        {{ commentCount }}
+                 </td> 
+                
+                <td class="tddd">
+                <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>   
+                <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+             {#<a href="{{ path('app_post_delete', {'id': post.id}) }}">delete</a>#}   
+                 {{ include('post/_delete_form.html.twig') }}   
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_post_new') }}">Create new</a>
+{% endblock %}

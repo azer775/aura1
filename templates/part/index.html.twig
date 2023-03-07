@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Part index{% endblock %}
 
@@ -23,6 +23,7 @@
                 <td>
                     <a href="{{ path('app_part_show', {'id': part.id}) }}">show</a>
                     <a href="{{ path('app_part_edit', {'id': part.id}) }}">edit</a>
+                     {{ include('part/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

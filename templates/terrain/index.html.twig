@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Terrain index{% endblock %}
 
@@ -25,6 +25,7 @@
                 <td>
                     <a href="{{ path('app_terrain_show', {'id': terrain.id}) }}">show</a>
                     <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
+                            {{ include('terrain/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

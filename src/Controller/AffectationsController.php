@@ -20,7 +20,15 @@ class AffectationsController extends AbstractController
             'affectations' => $affectationsRepository->findAll(),
         ]);
     }
+    #[Route('/afficher', name: 'app_affectations_afficher', methods: ['GET'])]
+    public function afficher(Request $request ,AffectationsRepository $affectationsRepository): Response
+    {    $session= $request->getSession();
+         $membre=$session->get('user');
 
+        return $this->render('affectations/afficher.html.twig', [
+            'affectations' => $affectationsRepository->findByMembre($membre->getId()),
+        ]);
+    }
     #[Route('/new', name: 'app_affectations_new', methods: ['GET', 'POST'])]
     public function new(Request $request, AffectationsRepository $affectationsRepository): Response
     {
@@ -66,7 +74,7 @@ class AffectationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_affectations_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_affectations_delete', methods: ['POST'])]
     public function delete(Request $request, Affectations $affectation, AffectationsRepository $affectationsRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$affectation->getId(), $request->request->get('_token'))) {

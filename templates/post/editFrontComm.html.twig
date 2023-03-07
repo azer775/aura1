@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Your Comment{% endblock %}
+
+{% block body %}
+    <h1>Edit Your Comment</h1>
+
+    {{ form_start(formComm,{'attr': {'novalidate': 'novalidate'}} ) }}
+                 
+                     {{ form_row(formComm.text, {'label': false}) }}
+                  
+                    <button class="btn_Comment">{{ button_label|default('Comment') }}</button>
+
+                     {{ form_end(formComm) }}
+
+  {#  <a href="{{ path('app_post_affiche') }}">back to list</a>#}
+    <script>
+     function displayFlashMessages() {
+  const flashMessages = document.querySelector('#flash-messages');
+  if (flashMessages) {
+    flashMessages.classList.add('show');
+    setTimeout(() => {
+      flashMessages.classList.remove('show');
+    }, 5000);
+  }
+}
+</script>
+{% if app.session.flashbag.peekAll %}
+  <div id="flash-messages">
+    {% for type, messages in app.session.flashbag.all %}
+      {% for message in messages %}
+        <div class="alert alert-{{ type }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if app.request.get('redirected') %}
+  <script>
+    displayFlashMessages();
+  </script>
+{% endif %}
+   
+{% endblock %}

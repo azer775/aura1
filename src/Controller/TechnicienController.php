@@ -66,7 +66,7 @@ class TechnicienController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_technicien_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_technicien_delete', methods: ['POST'])]
     public function delete(Request $request, Technicien $technicien, TechnicienRepository $technicienRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$technicien->getId(), $request->request->get('_token'))) {

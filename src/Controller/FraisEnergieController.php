@@ -66,7 +66,7 @@ class FraisEnergieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_frais_energie_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_frais_energie_delete', methods: ['POST'])]
     public function delete(Request $request, FraisEnergie $fraisEnergie, FraisEnergieRepository $fraisEnergieRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$fraisEnergie->getId(), $request->request->get('_token'))) {
