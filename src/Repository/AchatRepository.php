@@ -55,7 +55,7 @@ class AchatRepository extends ServiceEntityRepository
     public function getAchatsPourfacture($factureId)
     {
         $query = $this->createQueryBuilder('a')
-        ->leftJoin('a.facture', 'f')
+        ->Join('a.facture', 'f')
         ->where('f.id = :factureId')
         ->setParameter('factureId', $factureId);
 

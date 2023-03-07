@@ -21,7 +21,7 @@
                 <td>{{ facture.montant }}</td>
                 <td>{{ facture.date ? facture.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_achat_pdf') }}">détails</a>
+                    <a href="{{ path('app_achat_pdf', {'id': facture.id}) }}">détails</a>
                     
                 </td>
             </tr>

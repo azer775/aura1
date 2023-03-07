@@ -35,10 +35,10 @@ class AchatController extends AbstractController
             'nbr' => json_encode($nbr),
         ]);
     }
-    #[Route('/pdf', name: 'app_achat_pdf', methods: ['GET', 'POST'])]
-    public function generatePdfPersonne(AchatRepository $achatRepository, PdfService $pdf) {
+    #[Route('/pdf/{id}', name: 'app_achat_pdf', methods: ['GET', 'POST'])]
+    public function generatePdfPersonne(AchatRepository $achatRepository, PdfService $pdf,Facture $facture) {
         $html = $this->render('achat/pdf.html.twig', [
-            'achats' => $achatRepository->findAll(),
+            'achats' => $achatRepository->getAchatsPourfacture($facture->getId()),
             
         ]);
         $pdf->showPdfFile($html);
