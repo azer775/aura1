@@ -648,7 +648,12 @@ ol {
 	position: relative;
 	float: left;
 }
-
+#search-results {
+	background-color: #f8f8f8;
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-top: 10px;
+  }
 .hero__search__form form .hero__search__categories {
 	width: 30%;
 	float: left;

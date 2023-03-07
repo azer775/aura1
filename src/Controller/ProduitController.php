@@ -43,24 +43,27 @@ class ProduitController extends AbstractController
         ]);
         
     }
-    #[Route('/search', name: 'produit_search', methods: ['GET'])]
-    public function search(Request $request,ProduitRepository $produitRepository): JsonResponse
+    #[Route('/search', name: 'app_post_search', methods: ['GET'])]
+   
+    public function search(ProduitRepository $postRepository, Request $request): JsonResponse
     {
-        $term = $request->query->get('term');
-
-        $produits = $produitRepository->findAll();
+        $query = $request->query->get('q');
+        dump($query);
 
         $results = [];
-        foreach ($produits as $produit) {
-            $results[] = [
-                'id' => $produit->getId(),
-                'nom' => $produit->getNomProd(),
-                'description' => $produit->getDescription(),
-                // ...
+        if ($query !== null) {
+            $results = $postRepository->findByNom($query)->getQuery()->getResult();
+        }
+    
+        $response = [];
+        foreach ($results as $result) {
+            $response[] = [
+                'url' => $this->generateUrl('app_produit_show', ['id' => $result->getId()]),
+                'nom' => $result->getNomProd(),
             ];
         }
-
-        return new JsonResponse($results);
+    
+        return new JsonResponse($response);
     }
     #[Route('/recherche', name: 'produit_recherche')]
     public function recherche(): Response

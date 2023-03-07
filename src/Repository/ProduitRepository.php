@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Produit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends ServiceEntityRepository<Produit>
@@ -38,16 +39,17 @@ class ProduitRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function findByNom($value): array
+    public function findByNom($value): QueryBuilder
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.nom_pod LIKE :val')
+       $qb= $this->createQueryBuilder('p');
+            $qb->andWhere('p.nom_Prod LIKE :val')
             ->setParameter('val', '%'.$value.'%')
             //->orderBy('p.id', 'ASC')
             //->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+            //->getQuery()
+            //->getResult()
         ;
+        return $qb;
    }
 //    /**
 //     * @return Produit[] Returns an array of Produit objects
