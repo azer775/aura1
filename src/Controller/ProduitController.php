@@ -22,6 +22,21 @@ class ProduitController extends AbstractController
             'categories' => $categorieRepository->findAll(),
             
         ]);
+        return $this->render('produit/afficher.html.twig', [
+            'produits' => $produitRepository->findAll(),
+            'categories' => $categorieRepository->findAll(),
+            
+        ]);
+        
+    }
+    #[Route('/afficher', name: 'app_produit_afficher', methods: ['GET'])]
+    public function afficher(ProduitRepository $produitRepository,CategorieRepository $categorieRepository): Response
+    {
+        return $this->render('produit/afficher.html.twig', [
+            'produits' => $produitRepository->findAll(),
+            'categories' => $categorieRepository->findAll(),
+            
+        ]);
         
     }
 

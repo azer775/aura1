@@ -156,7 +156,6 @@
 .sidebar .navbar .dropdown-toggle::after {
     position: absolute;
     top: 15px;
-    
     border: none;
     content: "\f107";
     font-family: "Font Awesome 5 Free";
