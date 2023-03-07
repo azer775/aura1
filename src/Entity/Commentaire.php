@@ -3,8 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
@@ -12,19 +17,31 @@ class Commentaire
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("cmnts","posts")]
+    
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message:"Commentaire ne peut pas etre vide")]
+    #[Groups("cmnts")]
     private ?string $text = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    
+    #[Groups("cmnts")]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[Groups("cmnts")]
     private ?Post $post = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #JoinColumn(nullable=false)
     private ?Membre $membre = null;
+
+  
+
+  
 
     public function getId(): ?int
     {
@@ -78,5 +95,11 @@ class Commentaire
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->id;
+    }
+
+   
     
 }
