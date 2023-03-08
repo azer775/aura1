@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Don
 {% endblock %}
 
 {% block body %}
 	<h1>Don</h1>
-
+	<a target="_blank" , href="{{ path('app_don_pdf', {'id': don.id}) }}">Download PDF</a>
 	<table class="table">
 		<tbody>
 			<tr>
@@ -45,6 +45,5 @@
 
 	<a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
 	{{include('don/_delete_form.html.twig')}}
-	<a target="_blank" , href="{{ path('app_don_pdf', {'id': don.id}) }}">Download PDF</a>
-	<a href="{{ path('app_don_index') }}">back to list</a>
+	<a href="{{ path('app_don_index') }}">Back To List</a>
 {% endblock %}

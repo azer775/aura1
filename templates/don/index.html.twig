@@ -6,7 +6,7 @@
 {% block body %}
 	<h1>
 		<center>Donations</h1>
-
+		<a target="_blank" href="{{ path('app_don_stats') }}">Top Associations / Donation</a>
 		<table class="table">
 			<thead>
 				<tr>
@@ -18,9 +18,7 @@
 					<th>Carte Credit</th>
 					<th>Email</th>
 					<th>Message</th>
-
 					<th>Actions</th>
-
 				</tr>
 			</thead>
 			<tbody>
@@ -34,11 +32,9 @@
 						<td>{{ don.cartecredit }}</td>
 						<td>{{ don.Email }}</td>
 						<td>{{ don.message }}</td>
-
-
 						<td>
-							<a href="{{ path('app_don_show', {'id': don.id}) }}">show</a>
-							<a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
+							<a href="{{ path('app_don_show', {'id': don.id}) }}">Show</a>
+							<a href="{{ path('app_don_edit', {'id': don.id}) }}">Edit</a>
 							{{include('don/_delete_form.html.twig')}}
 						</td>
 					</tr>
@@ -49,6 +45,5 @@
 				{% endfor %}
 			</tbody>
 		</table>
-
 
 	{% endblock %}
