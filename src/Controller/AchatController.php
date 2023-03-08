@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/achat')]
+#[Route('/achat')] /*5555*/ 
 class AchatController extends AbstractController
 {
     #[Route('/', name: 'app_achat_index', methods: ['GET'])]
