@@ -17,8 +17,6 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 #[Route('/don')]
@@ -152,41 +150,14 @@ class DonController extends AbstractController
         return $response;
     }
 
-    #[Route('/chart', name: 'don-chart')]
-    public function chart(DonRepository $donRepository, SerializerInterface $serializer): Response
+
+    #[Route('/stats/association', name: 'app_don_stats', methods: ['GET'])]
+    public function stats(DonRepository $donRepository): Response
     {
-        $dons = $donRepository->findAll();
+        $stats = $donRepository->countDonationsByAssociation();
 
-        $data = array();
-        $data[] = array('Montant', 'Associations');
-        foreach ($dons as $don) {
-            $association = $don->getAssociation();
-            if ($association) {
-                $associationName = $association->getNom();
-                if (!isset($data[$associationName])) {
-                    $data[$associationName] = 0;
-                }
-                $data[$associationName] += $don->getMontant();
-            }
-        }
-
-        $rows = array();
-        foreach ($data as $associationName => $montantTotal) {
-            $rows[] = array($associationName, $montantTotal);
-        }
-
-        $chartData = array(
-            'cols' => array(
-                array('label' => 'Association', 'type' => 'string'),
-                array('label' => 'Montant total', 'type' => 'number')
-            ),
-            'rows' => $rows
-        );
-
-        $jsonChartData = $serializer->serialize($chartData, 'json');
-
-        return $this->render('don/chart.html.twig', [
-            'chartData' => $jsonChartData
+        return $this->render('don/stats.html.twig', [
+            'stats' => $stats,
         ]);
     }
 }

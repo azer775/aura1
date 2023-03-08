@@ -94,7 +94,7 @@ class AssociationController extends AbstractController
         $response = new StreamedResponse();
         $response->setCallback(function () use ($associations) {
             $handle = fopen('php://output', 'w+');
-            fputcsv($handle, ['Name', 'Description', 'City', 'Country']);
+            fputcsv($handle, ['Nom', 'Adresse', 'RIB', 'Email']);
 
             foreach ($associations as $association) {
                 fputcsv($handle, [

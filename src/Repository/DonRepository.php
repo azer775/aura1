@@ -39,4 +39,14 @@ class DonRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function countDonationsByAssociation()
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->select('a.nom as association, count(d.id) as count')
+            ->join('d.association', 'a')
+            ->groupBy('d.association')
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }
