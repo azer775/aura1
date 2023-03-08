@@ -386,10 +386,10 @@
 
 
 <script>
-    
-    $('#search-form').on('submit', function(event) {
-        event.preventDefault();
+  $(document).ready(function() {
+    // Ecouter l'événement de frappe sur le champ de recherche et le changement de date
     $('#search-input').on('keyup change', function() {
+        // Récupérer la valeur du champ de recherche
         var query = $('#search-input').val();
 
         // Récupérer la valeur du champ de date
