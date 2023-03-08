@@ -1,41 +1,54 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}Don index{% endblock %}
+{% block title %}Donation
+{% endblock %}
 
 {% block body %}
-    <h1>Don index</h1>
+	<h1>
+		<center>Donations</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Montant</th>
-                <th>Date_Don</th>
-                <th>Membre</th>
-                <th>Association</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for don in dons %}
-            <tr>
-                <td>{{ don.id }}</td>
-                <td>{{ don.montant }}</td>
-                <td>{{ don.dateDon ? don.dateDon|date('Y-m-d') : '' }}</td>
-                <td>{{ don.Membre }}</td>
-                <td>{{ don.Association }}</td>
-                <td>
-                    <a href="{{ path('app_don_show', {'id': don.id}) }}">show</a>
-                    <a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Membre</th>
+					<th>Association</th>
+					<th>Montant</th>
+					<th>Date</th>
+					<th>Carte Credit</th>
+					<th>Email</th>
+					<th>Message</th>
 
-    
-{% endblock %}
+					<th>Actions</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				{% for don in dons %}
+					<tr>
+						<td>{{ don.id }}</td>
+						<td>{{ don.membre.nom }}</td>
+						<td>{{ don.association.nom }}</td>
+						<td>{{ don.montant }}</td>
+						<td>{{ don.dateDon ? don.dateDon|date('Y-m-d') : '' }}</td>
+						<td>{{ don.cartecredit }}</td>
+						<td>{{ don.Email }}</td>
+						<td>{{ don.message }}</td>
+
+
+						<td>
+							<a href="{{ path('app_don_show', {'id': don.id}) }}">show</a>
+							<a href="{{ path('app_don_edit', {'id': don.id}) }}">edit</a>
+							{{include('don/_delete_form.html.twig')}}
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+
+	{% endblock %}

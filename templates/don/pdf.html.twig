@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Donation Receipt</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+			.container {
+				width: 600px;
+				margin: 0 auto;
+			}
+			.receipt-header {
+				text-align: center;
+				margin-top: 50px;
+			}
+			.receipt-body {
+				margin-top: 30px;
+				padding: 20px;
+				border: 1px solid #ccc;
+			}
+			.receipt-body p {
+				margin: 10px 0;
+			}
+			.receipt-footer {
+				text-align: center;
+				margin-top: 30px;
+			}
+			.logo {
+				display: block;
+				margin: 0 auto;
+				max-width: 100%;
+				height: auto;
+			}
+			h1,
+			h2,
+			h3 {
+				margin-top: 0;
+				margin-bottom: 10px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-top: 30px;
+			}
+			th,
+			td {
+				padding: 10px;
+				text-align: left;
+				border: 1px solid #ccc;
+			}
+			th {
+				background-color: #eee;
+			}
+			.bold {
+				font-weight: bold;
+			}
+			.center {
+				text-align: center;
+			}
+			.gray {
+				color: #777;
+			}
+			.total {
+				font-size: 18px;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div
+			class="container">
+			{#<div class="receipt-header">
+						<img src="/var/www/html/public/images/logox.png" alt="My Logo">
+						<h1>Donation Receipt</h1>
+						</div>#}
+			<div class="receipt-body">
+				<p>Hey
+					<span class="bold">{{ don.membre.nom }}!</span>
+					Thank you for your generous donation of
+					<span class="bold">{{ don.montant }}€</span>
+					to our association
+					<span class="bold">{{ don.association.nom }}</span>.</p>
+				<p>Your donation was received on
+					<span class="bold">{{ don.dateDon|date('F j, Y') }}</span>. The donation receipt ID is
+					<span class="bold">{{ don.id }}</span>.</p>
+			</div>
+			<table>
+				<tr>
+					<th>Donation Details</th>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							<span class="bold">Membre:</span>
+							{{don.membre.nom}}</p>
+						<p>
+							<span class="bold">Association:</span>
+							{{don.association.nom}}</p>
+						<p>
+							<span class="bold">Date:</span>
+							{{ don.dateDon ? don.dateDon|date('Y-m-d') : '' }}</p>
+						<p>
+							<span class="bold">Carte de crédit:</span>
+							{{ don.cartecredit}}</p>
+						<p>
+							<span class="bold">Email:</span>
+							{{ don.Email}}</p>
+						<p>
+							<span class="bold">Message:</span>
+							{{ don.message}}</p>
+					</td>
+				</tr>
+				<tr>
+					<td class="center gray">Thank you again for your support!</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

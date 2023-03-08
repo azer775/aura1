@@ -9,26 +9,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 #[Route('/association')]
 class AssociationController extends AbstractController
 {
     #[Route('/', name: 'app_association_index', methods: ['GET'])]
-    public function index(Request $request,AssociationRepository $associationRepository): Response
-    {   $session= $request->getSession();
-        $membre=$session->get('user');
+    public function index(Request $request, AssociationRepository $associationRepository): Response
+    {
+        $session = $request->getSession();
+        $membre = $session->get('user');
         return $this->render('association/index.html.twig', [
             'associations' => $associationRepository->findAll(),
             'user' => $membre
         ]);
     }
     #[Route('/afficher', name: 'app_association_afficher', methods: ['GET'])]
-    public function afficher(Request $request,AssociationRepository $associationRepository): Response
-    {   $session= $request->getSession();
-        $membre=$session->get('user');
+    public function afficher(AssociationRepository $associationRepository): Response
+    {
         return $this->render('association/afficher.html.twig', [
             'associations' => $associationRepository->findAll(),
-            'user' => $membre
         ]);
     }
     #[Route('/new', name: 'app_association_new', methods: ['GET', 'POST'])]
@@ -47,14 +48,6 @@ class AssociationController extends AbstractController
         return $this->renderForm('association/new.html.twig', [
             'association' => $association,
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_association_show', methods: ['GET'])]
-    public function show(Association $association): Response
-    {
-        return $this->render('association/show.html.twig', [
-            'association' => $association,
         ]);
     }
 
@@ -79,10 +72,46 @@ class AssociationController extends AbstractController
     #[Route('/{id}', name: 'app_association_delete', methods: ['POST'])]
     public function delete(Request $request, Association $association, AssociationRepository $associationRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$association->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $association->getId(), $request->request->get('_token'))) {
             $associationRepository->remove($association, true);
         }
 
         return $this->redirectToRoute('app_association_afficher', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}', name: 'app_association_show', methods: ['GET'])]
+    public function show(Association $association): Response
+    {
+        return $this->render('association/show.html.twig', [
+            'association' => $association,
+        ]);
+    }
+    #[Route('/export/xls', name: 'app_association_export_csv')]
+    public function exportCsv(AssociationRepository $associationRepository): StreamedResponse
+    {
+        $associations = $associationRepository->findAll();
+
+        $response = new StreamedResponse();
+        $response->setCallback(function () use ($associations) {
+            $handle = fopen('php://output', 'w+');
+            fputcsv($handle, ['Name', 'Description', 'City', 'Country']);
+
+            foreach ($associations as $association) {
+                fputcsv($handle, [
+                    $association->getNom(),
+                    $association->getAdresse(),
+                    $association->getRib(),
+                    $association->getEmail(),
+                ]);
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(Response::HTTP_OK);
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename=associations.csv');
+
+        return $response;
     }
 }

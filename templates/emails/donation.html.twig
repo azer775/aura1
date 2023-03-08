@@ -1,0 +1,23 @@
+{% extends 'base_email.html.twig' %}
+
+{% block body %}
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td align="center">
+				<table border="0" cellspacing="0" cellpadding="0" style="max-width: 600px;">
+					<tr>
+						<td bgcolor="#ffffff" style="padding: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 18px; line-height: 24px; color: #333333;">
+							<p style="font-size: 24px; line-height: 30px; margin-bottom: 20px;">Dear
+								{{ don.membre.nom }},</p>
+							<p style="font-size: 24px; line-height: 30px; margin-bottom: 20px;">Thank you for your generous donation of
+								{{ don.montant }}
+								€ to
+								{{ don.association.nom }}!</p>
+							<p style="font-size: 24px; line-height: 30px; margin-bottom: 20px;">Your support helps us continue our mission and make a positive impact in the community.</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+{% endblock %}

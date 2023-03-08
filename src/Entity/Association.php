@@ -6,6 +6,7 @@ use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 class Association
@@ -16,18 +17,33 @@ class Association
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez fournir un nom.')]
+    #[Assert\Length(max: 255, maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez fournir une adresse.')]
+    #[Assert\Length(max: 255, maxMessage: 'L\'adresse ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $adresse = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez fournir un RIB.')]
+    #[Assert\Length(
+        min: 8,
+        max: 23,
+        exactMessage: 'Le RIB doit avoir min longueur de 8 char'
+    )]
+    #[Assert\Type(type: 'integer', message: 'Le RIB doit être un nombre entier.')]
+    #[Assert\Positive(message: 'Le RIB doit être un nombre positif.')]
     private ?int $rib = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez fournir une adresse e-mail.')]
+    #[Assert\Email(message: 'L\'adresse e-mail "{{ value }}" n\'est pas valide.')]
+    #[Assert\Length(max: 255, maxMessage: 'L\'adresse e-mail ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $email = null;
 
-   #[ORM\OneToMany(mappedBy: 'Association', targetEntity: Don::class)]
+    #[ORM\OneToMany(mappedBy: 'Association', targetEntity: Don::class)]
     private Collection $dons;
 
     public function __construct()
@@ -88,9 +104,6 @@ class Association
         return $this;
     }
 
-    /**
-     * @return Collection<int, Don>
-     */
     public function getDons(): Collection
     {
         return $this->dons;
@@ -100,7 +113,7 @@ class Association
     {
         if (!$this->dons->contains($don)) {
             $this->dons->add($don);
-            $don->setAssociation($this);
+            $don->setAssociation($this->getId());
         }
 
         return $this;
@@ -117,8 +130,9 @@ class Association
 
         return $this;
     }
+
     public function __toString()
     {
-        return $this->nom.' '.$this->id;
+        return $this->nom . ' ' . $this->id;
     }
 }

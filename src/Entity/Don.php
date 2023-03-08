@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\DonRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use DateTimeInterface;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: DonRepository::class)]
 class Don
@@ -14,17 +16,49 @@ class Don
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[Assert\Type('float')]
+    #[Assert\Positive]
+    #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank(message: 'Veuillez fournir un montant.')]
     private ?float $montant = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_Don = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?DateTimeInterface $date_Don = null;
 
-    #[ORM\ManyToOne(inversedBy: 'dons')]
-    private ?Membre $Membre = null;
+    #[Assert\Regex(
+        pattern: '/^[0-9]+$/',
+        message: 'La carte de crédit ne doit contenir que des chiffres.'
+    )]
+    #[Assert\Length(
+        min: 16,
+        max: 16,
+        exactMessage: 'La carte de crédit doit avoir une longueur de 16 chiffres.'
+    )]
+    #[ORM\Column(nullable: false)]
+    #[Assert\NotBlank(message: 'Veuillez fournir une Carte Credit.')]
+    private ?string $carteCredit = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $message = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez fournir une adresse e-mail.')]
+    #[Assert\Email(message: 'L\'adresse e-mail "{{ value }}" n\'est pas valide.')]
+    #[Assert\Length(max: 255, maxMessage: 'L\'adresse e-mail ne peut pas dépasser {{ limit }} caractères.')]
+    private ?string $email;
+
+    #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
-    private ?Association $Association = null;
+    private ?Membre $membre = null;
+
+    #[Assert\Valid]
+    #[ORM\ManyToOne(inversedBy: 'dons')]
+    private ?Association $association = null;
+
+    public function __construct()
+    {
+        $this->date_Don = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -43,12 +77,12 @@ class Don
         return $this;
     }
 
-    public function getDateDon(): ?\DateTimeInterface
+    public function getDateDon(): ?DateTimeInterface
     {
         return $this->date_Don;
     }
 
-    public function setDateDon(\DateTimeInterface $date_Don): self
+    public function setDateDon(DateTimeInterface $date_Don): self
     {
         $this->date_Don = $date_Don;
 
@@ -57,24 +91,59 @@ class Don
 
     public function getMembre(): ?Membre
     {
-        return $this->Membre;
+        return $this->membre;
     }
 
-    public function setMembre(?Membre $Membre): self
+    public function setMembre(?Membre $membre): self
     {
-        $this->Membre = $Membre;
+        $this->membre = $membre;
 
         return $this;
     }
 
     public function getAssociation(): ?Association
     {
-        return $this->Association;
+        return $this->association;
     }
 
-    public function setAssociation(?Association $Association): self
+    public function setAssociation(?Association $association): self
     {
-        $this->Association = $Association;
+        $this->association = $association;
+
+        return $this;
+    }
+
+    public function getCarteCredit(): ?string
+    {
+        return $this->carteCredit;
+    }
+
+    public function setCarteCredit(?string $carteCredit): self
+    {
+        $this->carteCredit = $carteCredit;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

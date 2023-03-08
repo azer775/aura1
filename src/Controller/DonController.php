@@ -4,15 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Don;
 use App\Entity\Association;
-use App\Entity\Membre;
 use App\Form\DonType;
 use App\Repository\DonRepository;
 use App\Repository\MembreRepository;
-use App\Repository\AssociationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 #[Route('/don')]
 class DonController extends AbstractController
@@ -26,22 +33,32 @@ class DonController extends AbstractController
     }
 
     #[Route('/new/{id}', name: 'app_don_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, DonRepository $donRepository, Association $Association, MembreRepository $membreRepository ): Response
-    {  
-        $session= $request->getSession();
-        $membre=new Membre();
-        $membre=$session->get('user');
-        $membre=$membreRepository->find($membre->getId());
+    public function new(Request $request, MailerInterface $mailer, DonRepository $donRepository, MembreRepository $MembreRepository, Association $association): Response
+    {
+        $session = $request->getSession();
+        $membre = $session->get('user');
+        $membre = $MembreRepository->find($membre->getId());
         $don = new Don();
+        $don->setAssociation($association);
         $don->setMembre($membre);
-        $don->setAssociation($Association);
         $form = $this->createForm(DonType::class, $don);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $donRepository->save($don, true);
+            $transport = Transport::fromDsn('smtp://donmail.aura@gmail.com:hfuyelyepzpngkwm@smtp.gmail.com:587');
+            $mailer = new Mailer($transport);
+            $html = $this->renderView('emails/donation.html.twig', [
+                'don' => $don,
+            ]);
+            $email = (new Email())
+                ->from('donmail.aura@gmail.com')
+                ->to($don->getEmail())
+                ->subject('Thank you for your donation!')
+                ->html($html);
+            $mailer->send($email);
 
-            return $this->redirectToRoute('app_don_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_don_thanks', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('don/new.html.twig', [
@@ -51,17 +68,32 @@ class DonController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_don_show', methods: ['GET'])]
-    public function show(Don $don): Response
+    #[Route('/thanks', name: 'app_don_thanks')]
+    public function thanks(Request $request): Response
     {
+        $session = $request->getSession();
+        $membre = $session->get('user');
+        return $this->render('don/thanks.html.twig', [
+            'user' => $membre
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_don_show', methods: ['GET'])]
+    public function show(Request $request, Don $don): Response
+    {
+        $session = $request->getSession();
+        $membre = $session->get('user');
         return $this->render('don/show.html.twig', [
             'don' => $don,
+            'user' => $membre
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_don_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Don $don, DonRepository $donRepository): Response
     {
+        $session = $request->getSession();
+        $membre = $session->get('user');
         $form = $this->createForm(DonType::class, $don);
         $form->handleRequest($request);
 
@@ -74,16 +106,87 @@ class DonController extends AbstractController
         return $this->renderForm('don/edit.html.twig', [
             'don' => $don,
             'form' => $form,
+            'user' => $membre
         ]);
     }
 
     #[Route('/{id}', name: 'app_don_delete', methods: ['POST'])]
     public function delete(Request $request, Don $don, DonRepository $donRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$don->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $don->getId(), $request->request->get('_token'))) {
             $donRepository->remove($don, true);
         }
 
         return $this->redirectToRoute('app_don_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/pdf', name: 'app_don_pdf', methods: ['GET'])]
+    public function pdf(Request $request, Don $don): Response
+    {
+        $session = $request->getSession();
+        $membre = $session->get('user');
+
+        // create PDF options
+        $options = new Options();
+        $options->set('defaultFont', 'Helvetica');
+
+        // create PDF instance
+        $dompdf = new Dompdf($options);
+
+        // generate PDF content
+        $html = $this->renderView('don/pdf.html.twig', [
+            'don' => $don,
+            'user' => $membre,
+        ]);
+
+        // load HTML into PDF
+        $dompdf->loadHtml($html);
+
+        // render PDF
+        $dompdf->render();
+
+        // output PDF to the browser
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->setContent($dompdf->output());
+        return $response;
+    }
+
+    #[Route('/chart', name: 'don-chart')]
+    public function chart(DonRepository $donRepository, SerializerInterface $serializer): Response
+    {
+        $dons = $donRepository->findAll();
+
+        $data = array();
+        $data[] = array('Montant', 'Associations');
+        foreach ($dons as $don) {
+            $association = $don->getAssociation();
+            if ($association) {
+                $associationName = $association->getNom();
+                if (!isset($data[$associationName])) {
+                    $data[$associationName] = 0;
+                }
+                $data[$associationName] += $don->getMontant();
+            }
+        }
+
+        $rows = array();
+        foreach ($data as $associationName => $montantTotal) {
+            $rows[] = array($associationName, $montantTotal);
+        }
+
+        $chartData = array(
+            'cols' => array(
+                array('label' => 'Association', 'type' => 'string'),
+                array('label' => 'Montant total', 'type' => 'number')
+            ),
+            'rows' => $rows
+        );
+
+        $jsonChartData = $serializer->serialize($chartData, 'json');
+
+        return $this->render('don/chart.html.twig', [
+            'chartData' => $jsonChartData
+        ]);
     }
 }
