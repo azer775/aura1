@@ -1,0 +1,30 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Stats{% endblock %}
+
+{% block body %}
+    <h1>Stats</h1>
+
+    <div id="chart_div"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var jsonData = {{ chartData|raw }};
+
+            var data = google.visualization.arrayToDataTable(jsonData);
+
+            var options = {
+                title: 'Number of Comments per Post',
+                legend: { position: 'none' }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+    </script>
+{% endblock %}

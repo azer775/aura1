@@ -7,7 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -15,33 +17,40 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("posts","cmnts")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"Théme est obligatoire")]
+    #[Groups("posts")]
     private ?string $theme = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Url()]
     #[Assert\NotBlank(message:"Image est obligatoire")]
+    #[Groups("posts")]
     private ?string $image = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message:"Contenu est obligatoire")]
     #[Assert\Length(min:20,minMessage:"Veuillez écrire au moins 20 caractéres")]
+    #[Groups("posts")]
     private ?string $contenu = null;
 
     #[ORM\Column]
+    #[Groups("posts")]
     private ?int $nbr_Vue = 0;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
   //  #[Assert\Date()]
+    #[Groups("posts")]
     private ?\DateTimeInterface $date_Creation = null;
 
   //  #[ORM\ManyToOne(inversedBy: 'posts')]
    // private ?Admin $admin = null;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Commentaire::class,cascade:["remove"], orphanRemoval:true)]
+    #[Groups("posts")]
     private Collection $commentaires;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
@@ -49,13 +58,18 @@ class Post
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message:"Nom du post est obligatoire")]
+    #[Groups("posts")]
     private ?string $nom = null;
+
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Rating::class,cascade:["remove"], orphanRemoval:true)]
+    private Collection $ratings;
 
     
 
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
    
@@ -169,7 +183,7 @@ class Post
 
     public function __toString()
     {
-        return $this->theme;
+        return $this->nom.' '.$this->id;
     }
 
     public function getMembre(): ?Membre
@@ -192,6 +206,36 @@ class Post
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getPost() === $this) {
+                $rating->setPost(null);
+            }
+        }
 
         return $this;
     }

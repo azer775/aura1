@@ -274,3 +274,15 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+.brrr{
+    max-width: 40%;
+    max-height: 40%;
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+.tddd{
+    width: 110px;
+}
+
