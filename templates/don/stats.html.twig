@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Statistiques des dons par association
 {% endblock %}
@@ -16,8 +16,7 @@ google.charts.setOnLoadCallback(drawChart);
 function drawChart() {
 var data = google.visualization.arrayToDataTable([[
 'Association', 'Nombre de dons'
-],{% for stat in stats %}
-[
+],{% for stat in stats %}[
 '{{ stat.association }}', {{ stat.count }}
 ],{% endfor %}]);
 
@@ -30,6 +29,5 @@ var chart = new google.visualization.PieChart(document.getElementById('donations
 chart.draw(data, options);
 }
 	</script>
-
-	<a href="{{ path('app_association_index') }}">Back To List</a>
+	<a href="{{ path('app_don_index') }}">Back To List</a>
 {% endblock %}
