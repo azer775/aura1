@@ -1,4 +1,4 @@
-{% extends 'base1.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}New Terrain{% endblock %}
 
@@ -7,5 +7,7 @@
 
     {{ include('terrain/_form.html.twig') }}
 
-    <a href="{{ path('app_terrain_index') }}">back to list</a>
+    <a href="{{ path('app_terrain_index') }}"><button class="btn btn-primary">Back to list</button></a>
+
+
 {% endblock %}

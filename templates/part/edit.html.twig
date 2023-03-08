@@ -1,13 +1,13 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}Edit Part{% endblock %}
+{% block title %}Edit Solde{% endblock %}
 
 {% block body %}
-    <h1>Edit Part</h1>
+    <h1>Edit Solde</h1>
 
     {{ include('part/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_part_index') }}">back to list</a>
+    <a href="{{ path('app_part_index') }}"><button class="btn btn-primary">Back To list </button></a>
 
     {{ include('part/_delete_form.html.twig') }}
 {% endblock %}

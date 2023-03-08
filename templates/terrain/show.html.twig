@@ -1,4 +1,4 @@
-{% extends 'base1.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Terrain{% endblock %}
 
@@ -7,28 +7,63 @@
 
     <table class="table">
         <tbody>
+            <div class="container">
+                <div class="row">
+         
             <tr>
+            <div class="col-lg-2">
                 <th>Id</th>
                 <td>{{ terrain.id }}</td>
+                </div>
             </tr>
+          
+            
+         
+
             <tr>
+            <div class="col-lg-2">
                 <th>Surface</th>
                 <td>{{ terrain.surface }}</td>
+                </div>
             </tr>
+            <div class="col-lg-2">
+
             <tr>
+            <div class="col-lg-2">
+
                 <th>Adresse</th>
                 <td>{{ terrain.adresse }}</td>
+                </div>
+
             </tr>
+            </div>
+           
+
             <tr>
+            <div class="col-lg-2">
                 <th>Potentiel</th>
                 <td>{{ terrain.potentiel }}</td>
+                </div>
+
             </tr>
+
+            <tr>
+            <div class="col-lg-2">
+
+                <th>QrCode</th>
+                <td><img style="min-width: 20%;" src="{{ qrCodes['simple'] }}" /></td>
+                </div>
+
+            </tr>
+            </div> </div>
         </tbody>
     </table>
+    <div class="container d-flex flex-column align-items-center">
+    <div class="control my-2">
+    <a href="{{ path('app_terrain_index') }}"><button class="btn btn-primary mx-2">Back to list</button></a>
 
-    <a href="{{ path('app_terrain_index') }}">back to list</a>
-
-    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
-
+    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}"><button class="btn btn-warning">Edit</button></a>
+</div>
     {{ include('terrain/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

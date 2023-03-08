@@ -1,11 +1,11 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}New Part{% endblock %}
+{% block title %}New Solde{% endblock %}
 
 {% block body %}
-    <h1>Create new Part</h1>
+    <h1>Create new Solde</h1>
 
     {{ include('part/_form.html.twig') }}
 
-    <a href="{{ path('app_part_index') }}">back to list</a>
+<a href="{{ path('app_part_index') }}"><button class="btn btn-primary">Back To list </button></a>
 {% endblock %}

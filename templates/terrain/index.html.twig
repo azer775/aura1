@@ -4,6 +4,31 @@
 
 {% block body %}
     <h1>Terrain index</h1>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4 offset-lg-8">
+                        <form action="{{ path('search_terrain')}}" method="GET">
+                            <div class="input-group">
+                                <input type="search" class="form-control form-control-lg" placeholder="Entrer l'adresse d'un terrain" id="site-search" name="search">
+                                <div class="input-group-append">
+                                    <button  class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                             <div class="input-group">
+                                <input type="search" class="form-control form-control-lg" placeholder="Entrer le surface d'un terrain" id="site-search" name="search2">
+                                <div class="input-group-append">
+                                    <button  class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+       <button> <a href="{{ path('pdft')}}" class="btn btn-primary">PDF</a></button>
 
     <table class="table">
         <thead>
@@ -11,7 +36,6 @@
                 <th>Id</th>
                 <th>Surface</th>
                 <th>Adresse</th>
-                <th>Membre</th>
                 <th>Potentiel</th>
                 <th>actions</th>
             </tr>
@@ -22,11 +46,11 @@
                 <td>{{ terrain.id }}</td>
                 <td>{{ terrain.surface }}</td>
                 <td>{{ terrain.adresse }}</td>
-                <td>{{ terrain.Membre }}</td>
                 <td>{{ terrain.potentiel }}</td>
+
                 <td>
-                    <a href="{{ path('app_terrain_show', {'id': terrain.id}) }}">show</a>
-                    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}">edit</a>
+                    <a href="{{ path('app_terrain_show', {'id': terrain.id}) }}"><button class="btn btn-primary">Show</button></a>
+                    <a href="{{ path('app_terrain_edit', {'id': terrain.id}) }}"><button class="btn btn-warning">Edit</button></a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +61,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_terrain_new') }}">Create new</a>
+    <a href="{{ path('app_terrain_new') }}"><button class="btn btn-primary">Create new</button></a>
 {% endblock %}

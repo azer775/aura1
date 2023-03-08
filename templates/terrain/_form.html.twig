@@ -1,4 +1,32 @@
-{{ form_start(form) }}
-    {{ form_widget(form, {'attr': {'class': 'form-control'}}) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+<div class="container">
+<table>
+<tr>
+<td><div class="col-6  form-group">{{form_label(form.surface,"Surface")}}</div></td>
+<td><div class="col-6">{{form_widget(form.surface)}}</div></td>
+<td><div class="col-12">{{form_errors(form.surface)}}</div></td>
+
+</tr>
+<tr>
+<td><div class="col-6 form-group">{{form_label(form.adresse,"adresse")}}</div></td>
+<td><div class="col-6">{{form_widget(form.adresse)}}</div></td>
+<td><div class="col-12">{{form_errors(form.adresse)}}</div></td>
+
+</tr>
+<tr>
+<td><div class="col-6  form-group">{{form_label(form.potentiel,"potentiel")}}</div></td>
+<td><div class="col-6">{{form_widget(form.potentiel)}}</div></td>
+<td><div class="col-12">{{form_errors(form.potentiel)}}</div></td>
+
+</tr>
+<tr>
+<td><div class="col-6  form-group">{{form_label(form.id_partenaire,"CIN de partenaire")}}</div></td>
+<td><div class="col-6">{{form_widget(form.id_partenaire)}}</div></td>
+<td><div class="col-12">{{form_errors(form.id_partenaire)}}</div></td>
+
+</tr>
+
+</table>
+  </div>
+    <button class="btn  btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
