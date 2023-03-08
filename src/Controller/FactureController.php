@@ -43,7 +43,7 @@ class FactureController extends AbstractController
             }
         $facture->setMontant($somme);
         $factureRepository->save($facture,true);
-        $message="bonjour Mr/mme";
+        $message="bonjour Mr/mme ";
         $message .=$membre->getNom().' '.$membre->getPrenom();
         $message .=" votre achat fait le ".$facture->getDate()->format('Y-m-d')."et de montant ".  $facture->getMontant() ." est confirmé";
         $transport = Transport::fromDsn('smtp://donmail.aura@gmail.com:hfuyelyepzpngkwm@smtp.gmail.com:587');
