@@ -6,6 +6,7 @@ use App\Repository\TechnicienRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TechnicienRepository::class)]
 class Technicien
@@ -15,22 +16,32 @@ class Technicien
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message:"Nom Invalide")]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message:"Prenom Invalide")]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 8)]
+    #[Assert\Positive(message:"Telephone Invalide")]
+    #[Assert\NotBlank(message:"Telephone Invalide")]
     private ?string $tel = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
+    #[Assert\Email(message:"Email Invalide")]
+    #[Assert\NotBlank(message:"Email Invalide")]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 15)]
+    #[Assert\NotBlank(message:"Spécialité Invalide")]
+    #[Assert\Positive(message:"Spécialité Invalide")]
     private ?string $specialite = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:"Salaire Invalide")]
+    #[Assert\Positive(message:"Salaire Invalide")]
     private ?float $salaire = null;
 
    

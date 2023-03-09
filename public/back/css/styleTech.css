@@ -1,0 +1,46 @@
+.editlink 
+{
+  padding: 10px ;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS';
+}
+
+.btn
+{
+  padding: 10px ;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS';
+}
+
+
+.affectationspagination a:hover:not(.active) 
+{
+  color: rgb(29,118,157,0.6)
+}
+
+.affectationspagination 
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(29,118,157);
+  font-size: 2rem;
+  margin: 20px 20px;
+  padding: 20px 20px;   
+}
+
+
+
+
+
+
+  
+  
+  
+  
+
+   

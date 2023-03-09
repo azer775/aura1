@@ -1,15 +1,11 @@
 <?php
 
 namespace App\Entity;
-use App\Entity\Partenaire;
 
 use App\Repository\TerrainRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 
 #[ORM\Entity(repositoryClass: TerrainRepository::class)]
 class Terrain
@@ -17,53 +13,33 @@ class Terrain
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-   /**
-     *  @Groups({"post:read"})
-    */
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message:"surface est obligatoire")]
-    #[Assert\Positive(message:"le surface doit etre positif")]
-   /**
-     *  @Groups({"post:read"})
-    */
     private ?float $surface = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message:"l adresse est obligatoire")]
-    #[Assert\Length(min:5,minMessage:"Veuillez écrire au moins 5 caractéres")]
-   /**
-     *  @Groups({"post:read"})
-    */
     private ?string $adresse = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message:"le potentiel est obligatoire")]
-    #[Assert\Positive(message:"le potentiel doit etre positif")]
-   /**
-     *  @Groups({"post:read"})
-    */
     private ?float $potentiel = null;
 
-    #[ORM\ManyToOne(inversedBy: 'terrains')]
-   /**
-     *  @Groups({"post:read"})
-    */
-    private ?Partenaire $id_partenaire = null;
+   /* #[ORM\ManyToOne(inversedBy: 'terrains')]
+    private ?Partenaire $id_partenaire = null;*/
 
-    #[ORM\OneToMany(mappedBy: 'id_terrain', targetEntity: Solde::class)]
-    private Collection $soldes;
+    #[ORM\OneToMany(mappedBy: 'id_terrain', targetEntity: Part::class,cascade:["remove"], orphanRemoval:true)]
+    private Collection $parts;
 
-    #[ORM\OneToMany(mappedBy: 'terrain_id', targetEntity: Affectations::class)]
+    #[ORM\OneToMany(mappedBy: 'terrain', targetEntity: Affectations::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $affectations;
 
+    #[ORM\ManyToOne(inversedBy: 'terrains')]
+    private ?Membre $Membre = null;
 
     public function __construct()
     {
-        $this->soldes = new ArrayCollection();
+        $this->parts = new ArrayCollection();
         $this->affectations = new ArrayCollection();
-        
     }
 
     public function getId(): ?int
@@ -107,31 +83,42 @@ class Terrain
         return $this;
     }
 
-
-    /**
-     * @return Collection<int, Solde>
-     */
-    public function getSoldes(): Collection
+  /*  public function getIdPartenaire(): ?Partenaire
     {
-        return $this->soldes;
+        return $this->id_partenaire;
     }
 
-    public function addSolde(Solde $solde): self
+    public function setIdPartenaire(?Partenaire $id_partenaire): self
     {
-        if (!$this->soldes->contains($solde)) {
-            $this->soldes->add($solde);
-            $solde->setIdTerrain($this);
+        $this->id_partenaire = $id_partenaire;
+
+        return $this;
+    }*/
+
+    /**
+     * @return Collection<int, Part>
+     */
+    public function getParts(): Collection
+    {
+        return $this->parts;
+    }
+
+    public function addPart(Part $part): self
+    {
+        if (!$this->parts->contains($part)) {
+            $this->parts->add($part);
+            $part->setIdTerrain($this);
         }
 
         return $this;
     }
 
-    public function removeSolde(Solde $solde): self
+    public function removePart(Part $part): self
     {
-        if ($this->soldes->removeElement($solde)) {
+        if ($this->parts->removeElement($part)) {
             // set the owning side to null (unless already changed)
-            if ($solde->getIdTerrain() === $this) {
-                $solde->setIdTerrain(null);
+            if ($part->getIdTerrain() === $this) {
+                $part->setIdTerrain(null);
             }
         }
 
@@ -150,7 +137,7 @@ class Terrain
     {
         if (!$this->affectations->contains($affectation)) {
             $this->affectations->add($affectation);
-            $affectation->setTerrainId($this);
+            $affectation->setTerrain($this);
         }
 
         return $this;
@@ -160,15 +147,15 @@ class Terrain
     {
         if ($this->affectations->removeElement($affectation)) {
             // set the owning side to null (unless already changed)
-            if ($affectation->getTerrainId() === $this) {
-                $affectation->setTerrainId(null);
+            if ($affectation->getTerrain() === $this) {
+                $affectation->setTerrain(null);
             }
         }
 
         return $this;
     }
 
-    /*public function getMembre(): ?Membre
+    public function getMembre(): ?Membre
     {
         return $this->Membre;
     }
@@ -178,23 +165,9 @@ class Terrain
         $this->Membre = $Membre;
 
         return $this;
-    }*/
+    }
     public function __toString()
     {
         return $this->id;
     }
-
-   
-    public function getIdPartenaire(): ?Partenaire
-    {
-        return $this->id_partenaire;
-    }
-
-    public function setIdPartenaire(?Partenaire $partenaire): self
-    {
-        $this->id_partenaire = $partenaire;
-
-        return $this;
-    }
-    
 }

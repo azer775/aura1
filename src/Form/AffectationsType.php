@@ -12,10 +12,11 @@ class AffectationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date_debut')
-            ->add('date_fin')
-            ->add('technicien')
-            ->add('terrain')
+        ->add('technicien')
+        ->add('terrain')
+        ->add('date_debut')
+        ->add('date_fin')
+
         ;
     }
 
