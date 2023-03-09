@@ -156,7 +156,7 @@ class ProduitController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $produitRepository->save($produit, true);
 
-            return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_produit_afficher', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('produit/edit.html.twig', [
@@ -172,6 +172,6 @@ class ProduitController extends AbstractController
             $produitRepository->remove($produit, true);
         }
 
-        return $this->redirectToRoute('app_produit_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_produit_afficher', [], Response::HTTP_SEE_OTHER);
     }
 }
