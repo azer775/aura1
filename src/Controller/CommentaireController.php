@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpClient\HttpClient;
 
 #[Route('/commentaire')]
 class CommentaireController extends AbstractController
@@ -67,6 +68,67 @@ class CommentaireController extends AbstractController
             'form' => $form,
         ]);
     }
+    
+
+    #[Route("/{id}/updateComment", name:'comment_updat',methods: ['GET', 'POST'])]
+    public function updateComment(Commentaire $commentaire,Request $request,CommentaireRepository $commentaireRepository)
+    {
+        $session = $request->getSession();
+        $membre = $session->get('user');
+
+        $formComm = $this->createForm(CommentaireType::class, $commentaire);
+        $formComm->handleRequest($request);
+       
+        $httpClient = HttpClient::create();
+        
+        if ($formComm->isSubmitted() && $formComm->isValid() ) {
+            // $commentaireRepository->save($commentaire, true);
+            //filter for bad words:
+            $content = $commentaire->getText();
+            $response = $httpClient->request('GET', 'https://neutrinoapi.net/bad-word-filter', [
+                'query' => [
+                    'content' => $content
+                ],
+                'headers' => [
+                    'User-ID' => 'dhiadhia',
+                    'API-Key' => 'LFJj4XqhKYZsY8yzSm7wg08kTOeQF7rtA4MZYQZGVSVJa9ZG',
+                ]
+            ]);
+            if ($response->getStatusCode() === 200) {
+                $result = $response->toArray();
+                if ($result['is-bad']) {
+                    // Handle bad word found
+                    $this->addFlash('danger', 'Your comment contains inappropriate language and cannot be updated.');
+                    return $this->redirectToRoute('app_post_singlepage', ['id' => $commentaire->getPost()->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
+                } else {
+                    // Save comment
+                    $this->addFlash('success', 'Your comment has been updated successfully.');
+        
+                    $commentaireRepository->save($commentaire, true);
+                    return $this->redirectToRoute('app_post_singlepage', ['id' => $commentaire->getPost()->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
+                }
+            } else {
+                // Handle API error
+                
+                return new Response("Error processing request", Response::HTTP_INTERNAL_SERVER_ERROR);
+            } 
+           
+        }
+        return $this->renderForm('post/editFrontComm.html.twig', [
+            'formComm' => $formComm,
+            'user' => $membre,
+        ]);
+    }
+   #[Route("/comment/{id}/delete", name:'comment_delete')]
+    public function deleteComment(Commentaire $comment)
+{
+    
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->remove($comment);
+    $entityManager->flush();
+    $this->addFlash('success', 'Your comment was successfully deleted.');
+    return $this->redirectToRoute('app_post_singlepage', ['id' => $comment->getPost()->getId(),'redirected' => true]);
+}
 
     #[Route('/{id}/delete', name: 'app_commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, CommentaireRepository $commentaireRepository): Response

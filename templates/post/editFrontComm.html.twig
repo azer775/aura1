@@ -4,15 +4,29 @@
 
 {% block body %}
     <h1>Edit Your Comment</h1>
-
+ <div class="commentsss_form">
     {{ form_start(formComm,{'attr': {'novalidate': 'novalidate'}} ) }}
                  
                      {{ form_row(formComm.text, {'label': false}) }}
                   
-                    <button class="btn_Comment">{{ button_label|default('Comment') }}</button>
+                    <button class="btn_Comment">{{ button_label|default('Update Comment') }}</button>
 
                      {{ form_end(formComm) }}
-
+</div>
+<style>
+.commentsss_form button {
+ padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    margin-left: 12px;
+}
+</style>
   {#  <a href="{{ path('app_post_affiche') }}">back to list</a>#}
     <script>
      function displayFlashMessages() {
