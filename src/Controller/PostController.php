@@ -258,8 +258,7 @@ class PostController extends AbstractController
             $postRepository->remove($post, true);
         }
 
-        return $this->redirectToRoute('
-        app_post_affiche', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_post_affiche', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/postss', name: 'app_post_affiche', methods: ['GET'])]
     public function aff(PostRepository $PostRepository): Response
