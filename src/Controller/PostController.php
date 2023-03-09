@@ -138,8 +138,8 @@ class PostController extends AbstractController
                     'content' => $content
                 ],
                 'headers' => [
-                    'User-ID' => 'ysf',
-                    'API-Key' => 'y1sHojwhnPNtbeRwYt90l6nUiluLvAP6WUfH4cHDjoeMCRj2',
+                    'User-ID' => 'kenyyy',
+                    'API-Key' => '5BHthd8cpOKbeLxvO3vzd81CAkU0arg4PlFP5SoB5RLtzNr9',
                    
                 ]
             ]);
