@@ -43,7 +43,7 @@ class ProduitController extends AbstractController
         ]);
         
     }
-    #[Route('/addp', name: 'app_produit_add')]
+   /*  #[Route('/addp', name: 'app_produit_add')]
     public function add(Request $request, EntityManagerInterface $em): Response
 {
     $nomProd = $request->query->get('nom_prod');
@@ -85,7 +85,7 @@ class ProduitController extends AbstractController
         }
     
         return new JsonResponse($response);
-    }
+    } */
     #[Route('/recherche', name: 'produit_recherche')]
     public function recherche(): Response
     {
@@ -109,14 +109,14 @@ class ProduitController extends AbstractController
        die; 
         
     }
-    /* #[Route('/addp', name: 'app_produit_add')]
+     #[Route('/addp', name: 'app_produit_add')]
     public function add(ProduitRepository $repo,SerializerInterface $serializerInterface,Request $request,EntityManagerInterface $em)
     {$content=$request->getContent();
         $data=$serializerInterface->deserialize($content,Produit::class,'json');
         $em->persist($data);
         $em->flush();
         return new Response("success");
-    } */
+    } 
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProduitRepository $produitRepository): Response
     {
