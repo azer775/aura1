@@ -1,11 +1,12 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}New Technicien{% endblock %}
+{% block title %}Create Technicien{% endblock %}
 
 {% block body %}
-    <h1>Create new Technicien</h1>
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Create Technicien</h1>
 
     {{ include('technicien/_form.html.twig') }}
 
-    <a href="{{ path('app_technicien_index') }}">back to list</a>
+    <a href="{{ path('app_technicien_index') }}"class="editlink">Back</a>
 {% endblock %}

@@ -1,13 +1,14 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}Edit Technicien{% endblock %}
+{% block title %}Techniciens Edit{% endblock %}
 
 {% block body %}
-    <h1>Edit Technicien</h1>
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Techniciens Edit</h1>
 
     {{ include('technicien/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_technicien_index') }}">back to list</a>
+    <a href="{{ path('app_technicien_index') }}"class="editlink">Back</a>
 
     {{ include('technicien/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,11 +1,12 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}New Affectations{% endblock %}
+{% block title %}Create Affectation{% endblock %}
 
 {% block body %}
-    <h1>Create new Affectations</h1>
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Create Affectation</h1>
 
     {{ include('affectations/_form.html.twig') }}
 
-    <a href="{{ path('app_affectations_index') }}">back to list</a>
+    <a href="{{ path('app_affectations_index') }}" class="editlink">Back</a>
 {% endblock %}
