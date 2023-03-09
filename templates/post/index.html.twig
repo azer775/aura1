@@ -51,7 +51,7 @@
      
          <input type="text" id="search-input" placeholder="Name of the post" >
         <input type="date" id="search-date" placeholder="Date of the post" >
-       <button type="submit"> <span class="icon_search"></span></button>
+      
                             </form>
        
     <div id="search-results"></div>
@@ -60,19 +60,23 @@
 
 
 <script>
-    
-    $('#search-form').on('submit', function(event) {
-        event.preventDefault();
+  $(document).ready(function() {
+    // Ecouter l'événement de frappe sur le champ de recherche et le changement de date
+    $('#search-input, #search-date').on('keyup change', function() {
+        // Récupérer la valeur du champ de recherche
         var query = $('#search-input').val();
+
+        // Récupérer la valeur du champ de date
         var date = $('#search-date').val();
 
-         // Check if both fields are empty
+        // Vérifier si les deux champs sont vides
         if (!query && !date) {
-            $('#search-results').html('<p> Please provide a search criteria.</p>');
+            $('#search-results').html('<p>Please provide a search criteria.</p>');
             return;
         }
 
-        $.ajax({    
+        // Effectuer la recherche AJAX
+        $.ajax({
             type: 'GET',
             url: '/post/search',
             data: {q: query, date: date},
@@ -80,7 +84,7 @@
                 var resultsDiv = $('#search-results');
                 resultsDiv.empty();
                 if (data.length === 0) {
-                    resultsDiv.append('<p> No results found.</p>');
+                    resultsDiv.append('<p>No results found.</p>');
                 } else {
                     for (var i = 0; i < data.length; i++) {
                         var result = data[i];
@@ -93,6 +97,10 @@
             }
         });
     });
+
+  
+});
+
 </script>
 
  
@@ -249,10 +257,7 @@ box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
                         
                         <div class="col-lg-12">
                             <div class="product__pagination blog__pagination">
-                                <a href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                                {{ knp_pagination_render(posts)}}
                             </div>
                         </div>
                     </div>

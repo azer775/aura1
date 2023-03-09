@@ -16,9 +16,14 @@ class Don
     #[ORM\Column]
     private ?int $id = null;
 
+<<<<<<< HEAD
     
     #[Assert\Positive]
+=======
+    //#[Assert\Type('float')]
+>>>>>>> decb92be2577888edeea41d83048a1081280a6fa
     #[ORM\Column(type: 'float')]
+    #[Assert\Positive]
     #[Assert\NotBlank(message: 'Veuillez fournir un montant.')]
     private ?float $montant = null;
 
@@ -29,6 +34,7 @@ class Don
         pattern: '/^[0-9]+$/',
         message: 'La carte de crédit ne doit contenir que des chiffres.'
     )]
+    #[ORM\Column(nullable: false)]
     #[Assert\Length(
         min: 16,
         max: 16,
@@ -51,7 +57,7 @@ class Don
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Membre $membre = null;
 
-    #[Assert\Valid]
+    //#[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Association $association = null;
 
