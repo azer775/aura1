@@ -20,8 +20,12 @@ class AssociationController extends AbstractController
     {
         $session = $request->getSession();
         $membre = $session->get('user');
+        $searchQuery = $request->query->get('q');
+        $associations = $searchQuery ? $associationRepository->search($searchQuery) : $associationRepository->findAll();
+
         return $this->render('association/index.html.twig', [
             'associations' => $associationRepository->findAll(),
+            'associations' => $associations,
             'user' => $membre
         ]);
     }
@@ -113,5 +117,16 @@ class AssociationController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename=associations.csv');
 
         return $response;
+    }
+
+    #[Route('/search', name: 'app_association_search', methods: ['GET'])]
+    public function search(Request $request, AssociationRepository $associationRepository): Response
+    {
+        $query = $request->query->get('q');
+        $associations = $associationRepository->search($query);
+
+        return $this->render('association/_search_results.html.twig', [
+            'associations' => $associations,
+        ]);
     }
 }

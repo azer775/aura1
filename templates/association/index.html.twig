@@ -54,20 +54,21 @@
 		<div class="row">
 			<div class="col-lg-4 col-md-5">
 				<div class="blog__sidebar">
-					<div class="blog__sidebar__search">
-						<form action="#">
-							<input type="text" placeholder="Search...">
-							<button type="submit">
-								<span class="icon_search"></span>
-							</button>
-						</form>
+					<form id="search-form" method="GET">
+						<div class="form-group">
+							<label for="search-input">Search:</label>
+							<input type="text" class="form-control" id="search-input" name="q" value="{{ app.request.get('q') }}">
+						</div>
+						<button type="submit" class="btn btn-primary">Search</button>
+					</form>
+
+					<div
+						id="search-results"><!-- search results will be displayed here -->
 					</div>
 					<div class="blog__sidebar__item">
 						<h4>Categories</h4>
 						<ul>
-							<li>
-								RECHERCHE ICI
-							</li>
+							<li></li>
 						</li>
 					</ul>
 				</div>
@@ -111,4 +112,19 @@
 			</div>
 		</div>
 	</div>
-</div></section>{% endblock %}
+</div></section><script>
+// listen for changes in the search input field
+const searchInput = document.querySelector('#search-input');
+searchInput.addEventListener('input', () => { // get the search query from the input field
+const query = searchInput.value.trim();
+
+// make an AJAX request to fetch the search results
+const xhr = new XMLHttpRequest();
+xhr.open('GET', '{{ path('app_association_search') }}?q=' + encodeURIComponent(query));
+xhr.onload = function () {
+if (xhr.status === 200) { // display the search results in the search-results div
+document.querySelector('#search-results').innerHTML = xhr.responseText;
+}
+};
+xhr.send();
+});</script>{% endblock %}

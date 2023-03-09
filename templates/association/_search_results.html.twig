@@ -1,0 +1,9 @@
+{% if associations is not empty %}
+	<ul>
+		{% for association in associations %}
+			<li>{{ association.nom }}</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	No results found.
+{% endif %}
