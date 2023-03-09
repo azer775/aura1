@@ -16,14 +16,9 @@ class Don
     #[ORM\Column]
     private ?int $id = null;
 
-<<<<<<< HEAD
-    
+    #[Assert\Type('float')]
     #[Assert\Positive]
-=======
-    //#[Assert\Type('float')]
->>>>>>> decb92be2577888edeea41d83048a1081280a6fa
     #[ORM\Column(type: 'float')]
-    #[Assert\Positive]
     #[Assert\NotBlank(message: 'Veuillez fournir un montant.')]
     private ?float $montant = null;
 
@@ -34,12 +29,12 @@ class Don
         pattern: '/^[0-9]+$/',
         message: 'La carte de crédit ne doit contenir que des chiffres.'
     )]
-    #[ORM\Column(nullable: false)]
     #[Assert\Length(
         min: 16,
         max: 16,
-        exactMessage: 'La carte de crédit doit avoir une longueur de 16 chiffres.'
+        exactMessage: 'La carte de crédit doit avoir une longueur de 16 alphabet.'
     )]
+    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez fournir une Carte Credit.')]
     private ?string $carteCredit = null;
 
@@ -52,11 +47,9 @@ class Don
     #[Assert\Length(max: 255, maxMessage: 'L\'adresse e-mail ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $email;
 
-    //#[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Membre $membre = null;
 
-    //#[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Association $association = null;
 

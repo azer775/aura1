@@ -100,6 +100,7 @@ class AssociationController extends AbstractController
             'association' => $association,
         ]);
     }
+
     #[Route('/export/xls', name: 'app_association_export_csv')]
     public function exportCsv(AssociationRepository $associationRepository): StreamedResponse
     {
@@ -125,17 +126,32 @@ class AssociationController extends AbstractController
         $response->setStatusCode(Response::HTTP_OK);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename=associations.csv');
+        $response->headers->set('Expires', '0');
+        $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'public');
 
         return $response;
     }
 
-    #[Route('/search', name: 'app_association_search', methods: ['GET'])]
+    #[Route('/', name: 'app_association_search', methods: ['GET'])]
     public function search(Request $request, AssociationRepository $associationRepository): Response
     {
         $query = $request->query->get('q');
         $associations = $associationRepository->search($query);
 
         return $this->render('association/_search_results.html.twig', [
+            'associations' => $associations,
+        ]);
+    }
+
+    #[Route('/', name: 'reset_associations', methods: ['GET'])]
+    public function reset(AssociationRepository $associationRepository)
+    {
+        $associations = $associationRepository->reset();
+
+        return $this->render('association/index.html.twig', [
             'associations' => $associations,
         ]);
     }

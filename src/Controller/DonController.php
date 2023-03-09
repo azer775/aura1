@@ -71,6 +71,7 @@ class DonController extends AbstractController
     {
         $session = $request->getSession();
         $membre = $session->get('user');
+        $this->addFlash('success', 'Transaction Done Successfully!');
         return $this->render('don/thanks.html.twig', [
             'user' => $membre
         ]);

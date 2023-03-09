@@ -4,30 +4,44 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Statistiques des dons par association</h1>
+	<div class="container">
 
-	<div id="donations_chart"></div>
+		<div id="donations_chart"></div>
+		<a href="{{ path('app_don_index') }}" class="btn btn-primary mt-4 mb-2">Retour à la liste</a>
+	</div>
 
+	<!-- Load the Google Charts API -->
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
 		google.charts.load('current', {'packages': ['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-function drawChart() {
+function drawChart() { // Define the data for the chart
 var data = google.visualization.arrayToDataTable([[
 'Association', 'Nombre de dons'
 ],{% for stat in stats %}[
 '{{ stat.association }}', {{ stat.count }}
 ],{% endfor %}]);
 
+// Set chart options
 var options = {
 title: 'Statistiques des dons par association',
-is3D: true
+is3D: true,
+backgroundColor: '#f8f9fa',
+titleTextStyle: {
+color: '#212529',
+fontSize: 24,
+fontWeight: 'bold'
+},
+legendTextStyle: {
+color: '#212529',
+fontSize: 14
+}
 };
 
+// Create and draw the chart
 var chart = new google.visualization.PieChart(document.getElementById('donations_chart'));
 chart.draw(data, options);
 }
 	</script>
-	<a href="{{ path('app_don_index') }}">Back To List</a>
 {% endblock %}
