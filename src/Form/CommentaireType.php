@@ -16,7 +16,7 @@ class CommentaireType extends AbstractType
            // ->add('membre')
             //->add('date')
             //->add('post')
-            //->add('membre')
+            //add('membre')
         ;
     }
 

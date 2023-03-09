@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
-
+use Symfony\Component\Security\Core\Security;
 use Knp\Component\Pager\PaginatorInterface;
 
 
@@ -78,7 +78,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/search', name: 'app_post_search', methods: ['GET'])]
+    #[Route('/searc', name: 'app_post_searc', methods: ['GET'])]
    
     public function search(PostRepository $postRepository, Request $request): JsonResponse
     {
@@ -110,23 +110,15 @@ class PostController extends AbstractController
      
     
     #[Route('posts/{id}', name: 'app_post_singlepage', methods: ['GET','POST'])]
-    public function singlepage(Post $post,PostRepository $postRepository,Request $request, CommentaireRepository $commentaireRepository): Response
+    public function singlepage(Post $post,PostRepository $postRepository,Request $request, CommentaireRepository $commentaireRepository,Security $sec): Response
     {
 
-        $session= $request->getSession();
-        $membre=$session->get('user');
         $commentaire = new Commentaire();
-        $commentaire -> setPost($post);
-        $commentaire->setDate(new \DateTime());
-        //$commentaire->setMembre($membre);
-  
+        $membre=$sec->getUser();
+
         $formComm = $this->createForm(CommentaireType::class, $commentaire);
         $formComm->handleRequest($request);
-       /* $toxicity = $perspectiveApi->analyzeComment($commentaire->getText())['attributeScores']['TOXICITY']['summaryScore']['value'];
-
-        if ($toxicity > 0.8) {
-            return new Response('Commentaire inapproprié détecté.');
-        }*/
+     
         $httpClient = HttpClient::create();
         
         if ($formComm->isSubmitted() && $formComm->isValid() ) {
@@ -138,8 +130,8 @@ class PostController extends AbstractController
                     'content' => $content
                 ],
                 'headers' => [
-                    'User-ID' => 'kenyyy',
-                    'API-Key' => '5BHthd8cpOKbeLxvO3vzd81CAkU0arg4PlFP5SoB5RLtzNr9',
+                    'User-ID' => 'rrr',
+                    'API-Key' => '3b8j6yd1XZ8igQbWMznsJsb3OcBOswEg932B9qmZNyvDaz2d',
                    
                 ]
             ]);
@@ -151,6 +143,8 @@ class PostController extends AbstractController
                     return $this->redirectToRoute('app_post_singlepage', ['id' => $post->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
                 } else {
                     // Save comment
+                    $commentaire ->setPost($post);
+                    $commentaire->setDate(new \DateTime());
                     $commentaireRepository->save($commentaire, true);
                     $this->addFlash('success', 'Your comment has been posted successfully.');
                    
@@ -323,7 +317,6 @@ class PostController extends AbstractController
             $jsonContent =$normalizer->normalize($post, 'json',['groups'=>'posts'] );
             return new Response("Post deleted successsfully" . json_encode($jsonContent));
         }
-
 
         #[Route("/updatePost/{id}")]
         public function updateEvent(Request $req ,$id,NormalizerInterface $normalizer,PostRepository $postRepository)

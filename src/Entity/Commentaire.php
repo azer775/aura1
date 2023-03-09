@@ -35,7 +35,7 @@ class Commentaire
     #[Groups("cmnts")]
     private ?Post $post = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\ManyToOne(inversedBy: 'commentaires',cascade:['persist'])]
     #JoinColumn(nullable=false)
     private ?Membre $membre = null;
 
