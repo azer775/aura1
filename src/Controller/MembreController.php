@@ -91,7 +91,7 @@ class MembreController extends AbstractController
                 if ($membreRepository->findOneBy(['email' => $email])==null) {
                     $membre->setRole("membre");
                     $membreRepository->save($membre, true);
-                    return $this->redirectToRoute('app_membre_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('app_membre_loginf', [], Response::HTTP_SEE_OTHER);
                 } 
                 else {
                     $this->addFlash('error', 'Invalid credentials');
@@ -116,7 +116,7 @@ class MembreController extends AbstractController
                 if ($membreRepository->findOneBy(['email' => $email])==null) {
                     $membre->setRole("partenaire");
                     $membreRepository->save($membre, true);
-                    return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('app_membre_loginf', [], Response::HTTP_SEE_OTHER);
                 } 
                 else {
                     $this->addFlash('error', 'Invalid credentials');

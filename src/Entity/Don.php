@@ -16,7 +16,12 @@ class Don
     #[ORM\Column]
     private ?int $id = null;
 
+<<<<<<< HEAD
+    
+    #[Assert\Positive]
+=======
     //#[Assert\Type('float')]
+>>>>>>> decb92be2577888edeea41d83048a1081280a6fa
     #[ORM\Column(type: 'float')]
     #[Assert\Positive]
     #[Assert\NotBlank(message: 'Veuillez fournir un montant.')]
