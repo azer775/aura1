@@ -1,0 +1,60 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#rech tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+    <h1>User index</h1>
+    <input class="form-control" id="myInput" type="text" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>DateNais</th>
+                <th>IsActive</th>
+                <th>Tel</th>
+                <th>Photo</th>
+                <th>Adresse</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody id="rech">
+        {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.Nom }}</td>
+                <td>{{ user.Prenom }}</td>
+                <td>{{ user.DateNais ? user.DateNais|date('Y-m-d H:i:s') : '' }}</td>
+
+                <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ user.Tel }}</td>
+                <td><img src="{{ asset('Upload/')}}{{ user.Photo }}" width="100" class="img-circle" /></td>
+                <td>{{ user.Adresse }}</td>
+                <td>
+                    {% if user.isActive %}
+                    <a class="btn btn-danger" href="{{ path('app_user_bloquer', {'id': user.id}) }}">Blocker</a>
+                    {% else %}
+                    <a class="btn btn-primary" href="{{ path('app_user_debloquer', {'id': user.id}) }}">Deblocker</a>
+                        {% endif %}
+                </td>
+            </tr>
+           {% endfor%}
+        </tbody>
+    </table>
+
+{% endblock %}
