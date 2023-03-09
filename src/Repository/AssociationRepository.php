@@ -48,4 +48,12 @@ class AssociationRepository extends ServiceEntityRepository
 
         return $qb->getResult();
     }
+    public function reset()
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->orderBy('a.nom', 'ASC')
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }

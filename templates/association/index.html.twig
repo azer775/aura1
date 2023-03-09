@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block body %}
-
 	<section class="hero hero-normal">
 		<div class="container">
 			<div class="row">
@@ -20,15 +19,17 @@
 				<div class="col-lg-9">
 					<div class="hero__search">
 						<div class="hero__search__form">
-							<form action="#">
+							<form id="search-form" method="GET">
 								<div class="hero__search__categories">
 									All Categories
 									<span class="arrow_carrot-down"></span>
 								</div>
-								<input type="text" placeholder="What do yo u need?">
+								<input type="text" id="search-input" name="q" value="{{ app.request.get('q') }}" placeholder="Search association...">
 								<button type="submit" class="site-btn">SEARCH</button>
-
 							</form>
+						</div>
+						<div>
+							<a href="{{ path('reset_associations') }}" class="btn btn-danger">Reset</a>
 						</div>
 						<div class="hero__search__phone">
 							<div class="hero__search__phone__icon">
@@ -36,7 +37,7 @@
 							</div>
 							<div class="hero__search__phone__text">
 								<h5>+65 11.188.888</h5>
-								<span>support 24/7 time</span>
+								<span>Support 24/7 time</span>
 							</div>
 						</div>
 					</div>
@@ -44,76 +45,44 @@
 			</div>
 		</div>
 	</section>
-	<h1>
-		<center>Liste Des Associations</h1>
+	<center>
+		<h1>Liste Des Associations</h1>
 	</center>
-</h1>
-
-<section class="blog spad">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-4 col-md-5">
-				<div class="blog__sidebar">
-					<form id="search-form" method="GET">
-						<div class="form-group">
-							<label for="search-input">Search:</label>
-							<input type="text" class="form-control" id="search-input" name="q" value="{{ app.request.get('q') }}">
-						</div>
-						<button type="submit" class="btn btn-primary">Search</button>
-					</form>
-
-					<div
-						id="search-results"><!-- search results will be displayed here -->
-					</div>
-					<div class="blog__sidebar__item">
-						<h4>Categories</h4>
-						<ul>
-							<li></li>
-						</li>
-					</ul>
-				</div>
-
-			</div>
-		</div>
-		<div class="col-lg-8 col-md-7">
+	<section class="blog spad">
+		<div class="container">
 			<div class="row">
 				{% for association in associations %}
-					<div class="col-lg-6 col-md-6 col-sm-6">
+					<div class="col-lg-4 col-md-6 col-sm-6">
 						<div class="blog__item">
 							<div class="blog__item__pic">
-								<img src="{{asset('https://www.60millions-mag.com/sites/default/files/styles/asset_image_full/public/assets/images/thinkstockphotos-487921819.jpg?itok=7GwHM1RQ')}}" alt="">
+								<img src="{{ asset('https://www.60millions-mag.com/sites/default/files/styles/asset_image_full/public/assets/images/thinkstockphotos-487921819.jpg?itok=7GwHM1RQ') }}" alt="">
 							</div>
 							<div class="blog__item__text">
-
 								<h5>
 									<a href="#">{{ association.nom }}</a>
-									<a href="#">{{ association.adresse }}</a>
 								</h5>
-								<a href="{{ path('app_don_new', {'id': association.id}) }}" class="blog__btn">DONATE
-									<span class="arrow_right"></span>
+								<p>{{ association.adresse }}</p>
+								<a href="{{ path('app_don_new', {'id': association.id}) }}" class="blog__btn" style="display: inline-block; background-color: #5ca5ff; color: #fff; padding: 10px 20px; border-radius: 5px; text-transform: uppercase; font-weight: bold; transition: background-color 0.2s ease-in-out;">DONATE<span class="arrow_right"></span>
 								</a>
 							</div>
-
 						</div>
 					</div>
 				{% endfor %}
 
-
-				<div class="col-lg-12">
-					<div class="product__pagination blog__pagination">
-						<a href="#">1</a>
-						<a href="#">2</a>
-						<a href="#">3</a>
-						<a href="#">
-							<i class="fa fa-long-arrow-right"></i>
-						</a>
-					</div>
-				</div>
+				{% if associations|length == 0 %}
+					<p>No associations found.</p>
+				{% endif %}
+				{#
+												<div class="col-lg-12">
+													<div class="product__pagination blog__pagination">
+														{{ knp_pagination_render(associations) }}
+													</div>
+												</div> #}
 			</div>
 		</div>
-	</div>
-</div></section><script>
-// listen for changes in the search input field
+	</section>
+	<script>
+		// listen for changes in the search input field
 const searchInput = document.querySelector('#search-input');
 searchInput.addEventListener('input', () => { // get the search query from the input field
 const query = searchInput.value.trim();
@@ -127,4 +96,6 @@ document.querySelector('#search-results').innerHTML = xhr.responseText;
 }
 };
 xhr.send();
-});</script>{% endblock %}
+});
+	</script>
+{% endblock %}

@@ -32,11 +32,7 @@
 			<div class="alert alert-success">{{ flash_message }}</div>
 		{% endfor %}
 		<p>Your generosity is greatly appreciated.</p>
-		<a href="{{ path('app_association_index') }}">Back To List</a>
+		<a class="btn btn-primary mt-4 mb-2" href="{{ path('app_association_index') }}">Back To List</a>
 	</div>
-	<script>
-		{% if app.session.flashbag.get('success') is defined %}
-window.alert("Donation Done Successfully!");{% endif %}
-	</script>
 
 {% endblock %}

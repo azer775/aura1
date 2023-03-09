@@ -32,7 +32,7 @@ class Don
     #[Assert\Length(
         min: 16,
         max: 16,
-        exactMessage: 'La carte de crédit doit avoir une longueur de 16 chiffres.'
+        exactMessage: 'La carte de crédit doit avoir une longueur de 16 alphabet.'
     )]
     #[ORM\Column(nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez fournir une Carte Credit.')]
@@ -47,11 +47,9 @@ class Don
     #[Assert\Length(max: 255, maxMessage: 'L\'adresse e-mail ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $email;
 
-    #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Membre $membre = null;
 
-    #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Association $association = null;
 

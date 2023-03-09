@@ -30,7 +30,7 @@
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_association_edit', {'id': association.id}) }}">Edit</a>
+	<a class="btn btn-primary mt-4 mb-2" href="{{ path('app_association_edit', {'id': association.id}) }}">Edit</a>
+	<a class="btn btn-primary mt-4 mb-2" href="{{ path('app_association_afficher') }}">Back To List</a>
 	{{ include('association/_delete_form.html.twig') }}
-	<a href="{{ path('app_association_afficher') }}">Back To List</a>
 {% endblock %}
