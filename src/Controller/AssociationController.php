@@ -10,21 +10,31 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/association')]
 class AssociationController extends AbstractController
 {
     #[Route('/', name: 'app_association_index', methods: ['GET'])]
-    public function index(Request $request, AssociationRepository $associationRepository): Response
+    public function index(Request $request, AssociationRepository $associationRepository, PaginatorInterface $paginator): Response
     {
         $session = $request->getSession();
         $membre = $session->get('user');
         $searchQuery = $request->query->get('q');
         $associations = $searchQuery ? $associationRepository->search($searchQuery) : $associationRepository->findAll();
-
+        $associations=$paginator->paginate(
+            $associations, /* query NOT result */
+            $request->query->getInt('page', 1),
+            2
+        );
+        $association =$associationRepository->findAll();
+        $association=$paginator->paginate(
+            $association, /* query NOT result */
+            $request->query->getInt('page', 1),
+            2
+        );
         return $this->render('association/index.html.twig', [
-            'associations' => $associationRepository->findAll(),
+            'associations' => $association,
             'associations' => $associations,
             'user' => $membre
         ]);
