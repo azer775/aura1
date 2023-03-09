@@ -38,4 +38,14 @@ class AssociationRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function search($query)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.nom LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('a.nom', 'ASC')
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }
