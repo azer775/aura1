@@ -1,13 +1,12 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}Edit Affectations{% endblock %}
+{% block title %}Affectations Edit{% endblock %}
 
 {% block body %}
-    <h1>Edit Affectations</h1>
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Affectations Edit</h1>
 
     {{ include('affectations/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_affectations_index') }}">back to list</a>
-
+    <a href="{{ path('app_affectations_index') }}" class="editlink">Back</a>
     {{ include('affectations/_delete_form.html.twig') }}
 {% endblock %}

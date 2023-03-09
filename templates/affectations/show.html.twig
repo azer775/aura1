@@ -1,30 +1,35 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Affectations{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
     <h1>Affectations</h1>
 
-    <table class="table">
+    <table class="table" border="5" style="background-color: rgb(29,118,157,0.6)">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>ID Terrain</th>
                 <td>{{ affectation.id }}</td>
             </tr>
             <tr>
-                <th>Date_debut</th>
+                <th>Nom Technicien</th>
+                <td>{{ affectation.technicien }}</td>
+            </tr>
+            <tr>
+                <th>Date Debut</th>
                 <td>{{ affectation.dateDebut ? affectation.dateDebut|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>Date_fin</th>
+                <th>Date Fin</th>
                 <td>{{ affectation.dateFin ? affectation.dateFin|date('Y-m-d') : '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_affectations_index') }}">back to list</a>
+    <a href="{{ path('app_affectations_index') }}"class="editlink">Back</a>
 
-    <a href="{{ path('app_affectations_edit', {'id': affectation.id}) }}">edit</a>
+    <a href="{{ path('app_affectations_edit', {'id': affectation.id}) }}" class="editlink">Edit</a>
 
     {{ include('affectations/_delete_form.html.twig') }}
 {% endblock %}

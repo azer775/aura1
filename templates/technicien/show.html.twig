@@ -1,14 +1,15 @@
-{% extends 'base.html.twig' %}
+{% extends 'base1.html.twig' %}
 
 {% block title %}Technicien{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
     <h1>Technicien</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>ID Technicien</th>
                 <td>{{ technicien.id }}</td>
             </tr>
             <tr>
@@ -38,9 +39,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_technicien_index') }}">back to list</a>
+    <a href="{{ path('app_technicien_index') }}"class="editlink">Back</a>
 
-    <a href="{{ path('app_technicien_edit', {'id': technicien.id}) }}">edit</a>
+    <a href="{{ path('app_technicien_edit', {'id': technicien.id}) }}"class="editlink">Edit</a>
 
     {{ include('technicien/_delete_form.html.twig') }}
 {% endblock %}

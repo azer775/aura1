@@ -1,31 +1,35 @@
 {% extends 'base1.html.twig' %}
 
-{% block title %}Affectations index{% endblock %}
+{% block title %}Affectations Listes{% endblock %}
 
 {% block body %}
-    <h1>Affectations index</h1>
-
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Affectations Listes</h1>
+ 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Date_debut</th>
-                <th>Date_fin</th>
-                <th>technicien</th>
-                <th>actions</th>
+                <th>ID Terrain</th>
+                <th>Nom Technicien</th>
+                <th>Date Debut</th>
+                <th>Date Fin</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+            <a href="{{ path('app_affectations_new') }}"class="editlink">Create</a>
+            <a href="{{ path('app_affectations_calendar') }}"class="editlink">Calendrier</a>
+            <a href="{{ path('app_affectations_stat') }}"class="editlink">Statistique</a>
         {% for affectation in affectations %}
             <tr>
                 <td>{{ affectation.id }}</td>
-                
+                <td>{{ affectation.technicien }}</td>
                 <td>{{ affectation.dateDebut ? affectation.dateDebut|date('Y-m-d') : '' }}</td>
                 <td>{{ affectation.dateFin ? affectation.dateFin|date('Y-m-d') : '' }}</td>
-                <td>{{ affectation.technicien }}</td>
                 <td>
-                    <a href="{{ path('app_affectations_show', {'id': affectation.id}) }}">show</a>
-                    <a href="{{ path('app_affectations_edit', {'id': affectation.id}) }}">edit</a>
+                    <a href="{{ path('app_affectations_show', {'id': affectation.id}) }}"class="editlink">Show</a>
+                    <a href="{{ path('app_affectations_edit', {'id': affectation.id}) }}"class="editlink">Edit</a>
+                    {{ include('affectations/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
@@ -33,50 +37,11 @@
                 <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
+        
+
         </tbody>
     </table>
-   
-    <h1>Statistiques</h1>
-    <canvas id="categories" width="400" height="100"></canvas>
-
-    
- </div>
-
-    <a href="{{ path('app_affectations_new') }}">Create new</a>
-     {% block javascripts %}
-
-           
-<script>
-    let categories = document.querySelector("#categories")
-    let categGraph = new Chart(categories, {
-        type: "doughnut",
-        data: {
-            labels: {{ technom|raw }},
-            datasets: [{
-                label: "Répartition des catégories",
-                data: {{ nbr|raw }},
-                
-            backgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
-                '#4BC0C0',
-                '#E7E9ED',
-                '#FF9F40',
-                '#8E5EA2',
-                '#3e95cd',
-                '#8e5ea2',
-                '#3cba9f',
-                '#e8c3b9',
-                '#c45850'
-            ]
-            }]
-            
-        }
-        
-    })
-
-   
-</script>
-{% endblock %}
+    <div class="affectationspagination">
+    {{ knp_pagination_render(affectations) }}
+    </div>
 {% endblock %}

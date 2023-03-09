@@ -1,27 +1,28 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
 <div class="container">
-    
+
 <h1>Affectation</h1>
-<table class="table" border="2">
+<br>
+<table class="table" border="5" style="background-color: rgb(29,118,157,0.6)">
         <thead>
             <tr>
-                
-                <th>Date_debut</th>
-                <th>Date_fin</th>
-                <th>technicien</th>
-                <th>terrain</th>
+                <th>Nom Technicien</th>
+                <th>ID Terrain</th>
+                <th>Date Debut</th>
+                <th>Date Fin</th>
             </tr>
         </thead>
         <tbody>
+
         {% for affectation in affectations %}
             <tr>
-                
-                
-                <td>{{ affectation.dateDebut ? affectation.dateDebut|date('Y-m-d') : '' }}</td>
-                <td>{{ affectation.dateFin ? affectation.dateFin|date('Y-m-d') : '' }}</td>
                 <td>{{ affectation.technicien }}</td>
                 <td>{{ affectation.terrain }}</td>
+                <td>{{ affectation.dateDebut ? affectation.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ affectation.dateFin ? affectation.dateFin|date('Y-m-d') : '' }}</td>
             </tr>
         {% else %}
             <tr>
@@ -30,5 +31,8 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="affectationspagination">
+        {{ knp_pagination_render(affectations) }}
     </div>
-    {% endblock %}
+    </div>
+{% endblock %}
