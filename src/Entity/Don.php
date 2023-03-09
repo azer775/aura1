@@ -40,7 +40,6 @@ class Don
         max: 16,
         exactMessage: 'La carte de crédit doit avoir une longueur de 16 chiffres.'
     )]
-    #[ORM\Column(nullable: false)]
     #[Assert\NotBlank(message: 'Veuillez fournir une Carte Credit.')]
     private ?string $carteCredit = null;
 
@@ -53,7 +52,7 @@ class Don
     #[Assert\Length(max: 255, maxMessage: 'L\'adresse e-mail ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $email;
 
-    #[Assert\Valid]
+    //#[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'dons')]
     private ?Membre $membre = null;
 
