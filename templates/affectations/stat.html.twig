@@ -1,0 +1,47 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+
+{% block body %}
+<link rel="stylesheet" href="{{asset('back/css/styleTech.css')}}" type="text/css"> 
+    <h1>Statistiques</h1>
+    
+    <a href="{{ path('app_affectations_index') }}" class="editlink">Back</a>
+
+    <canvas id="categories" width="400" height="100"></canvas></div>
+    
+
+ {% block javascripts %}
+<script>
+    let categories = document.querySelector("#categories")
+    let categGraph = new Chart(categories, {
+        type: "doughnut",
+        data: {
+            labels: {{ technom|raw }},
+            datasets: [{
+                label: "Répartition des catégories",
+                data: {{ nbr|raw }},
+                
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#E7E9ED',
+                '#FF9F40',
+                '#8E5EA2',
+                '#3e95cd',
+                '#8e5ea2',
+                '#3cba9f',
+                '#e8c3b9',
+                '#c45850'
+            ]
+            }]   
+        }
+    })
+</script>
+
+{% endblock %}
+
+{% endblock %}
