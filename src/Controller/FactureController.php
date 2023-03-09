@@ -51,7 +51,7 @@ class FactureController extends AbstractController
             $email = (new Email())
                 ->from('aura.donation@gmail.com')
                 ->to($membre->getEmail())
-                ->subject('Thank you for your donation!')
+                ->subject('Confirmation de Facture')
                 ->html('<p style="color: #000000; background-color: #0073ff; width: 500px; padding: 16px 0; text-align: center; border-radius: 50px;">' . $message . '  !</p>');
             /*
                 // Set HTML "Body"
