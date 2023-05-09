@@ -73,6 +73,12 @@ class Membre
     #[ORM\OneToMany(mappedBy: 'Membre', targetEntity: Terrain::class,cascade:["remove"], orphanRemoval:true)]
     private Collection $terrains;
 
+    #[ORM\Column(length: 255)]
+    private ?string $photo = null;
+
+    #[ORM\Column]
+    private ?int $is_active = null;
+
     public function __construct()
     {
         $this->dons = new ArrayCollection();
@@ -395,6 +401,30 @@ class Membre
                 $terrain->setMembre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(string $photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(int $is_active): self
+    {
+        $this->is_active = $is_active;
 
         return $this;
     }

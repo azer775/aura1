@@ -16,14 +16,9 @@ class Don
     #[ORM\Column]
     private ?int $id = null;
 
-<<<<<<< Updated upstream
-    #[Assert\Type('float')]
-    #[Assert\Positive]
-=======
     
     //#[Assert\Positive]
     //#[Assert\Type('float')]
->>>>>>> Stashed changes
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank(message: 'Veuillez fournir un montant.')]
     private ?float $montant = null;

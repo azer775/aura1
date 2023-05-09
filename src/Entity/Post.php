@@ -39,7 +39,7 @@ class Post
 
     #[ORM\Column]
     #[Groups("posts")]
-    private ?int $nbr_Vue = 0;
+    private ?int $nbr_Vue = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
   //  #[Assert\Date()]

@@ -15,29 +15,97 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
+
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
-
-use Knp\Component\Pager\Pagination\PaginationInterface;
+use Symfony\Component\Security\Core\Security;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+
 
 #[Route('/post')]
 class PostController extends AbstractController
 {
 
+    #[Route('/addJson', name: 'app_post_addJSON', methods: ['GET','POST'])]
+    public function addPosts(Request $request,EntityManagerInterface $em): Response
+    {
+        $Post = new Post();
+        $theme = $request->query->get("theme");
+        $contenu=$request->query->get("contenu");
+        $nom=$request->query->get("nom");
+        $image=$request->query->get("image");
+        $date = new \DateTime('now');
+
+        $Post->setImage($image);
+        $Post->setTheme($theme);
+        $Post->setNom($nom);
+        $Post->setContenu($contenu);
+        $Post->setDateCreation($date);
+
+
+        $em->persist($Post);
+        $em->flush();
+
+        return $this->json($Post,200,[],['groups'=>'posts']);
+    }
+    #[Route("/deletePost/{id}")]
+    public function deletePost(Request $req ,$id,NormalizerInterface $normalizer,PostRepository $postRepository)
+    {
+        $post =$postRepository->find($id);
+        $postRepository->remove($post,true);
+        $jsonContent =$normalizer->normalize($post, 'json',['groups'=>'posts'] );
+        return new Response("Post deleted successsfully" . json_encode($jsonContent));
+    }
+ #[Route("/updatePost/{id}")]
+    public function updatePost(Request $request ,$id,SerializerInterface $seriaizer,PostRepository $postRepository)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Post = $this->getDoctrine()->getManager()
+            ->getRepository(Post::class)
+            ->find($request->get("id"));
+
+            $theme = $request->query->get("theme");
+            $contenu=$request->query->get("contenu");
+            $nom=$request->query->get("nom");
+            $image=$request->query->get("image");
+            $date = new \DateTime('now');
     
+            $Post->setImage($image);
+            $Post->setTheme($theme);
+            $Post->setNom($nom);
+            $Post->setContenu($contenu);
+            $Post->setDateCreation($date);
+    
+    
+    
+        $em->persist($Post);
+        $em->flush();
+       /* $serializer = new Serializer([new ObjectNormalizer()]);
+        $formatted = $serializer->normalize("Post a ete modifiee avec success.");*/
+         return $this->json($Post,200,[],['groups'=>'posts']);
+    }
+    #[Route('/allpostjson', name: 'app_post_liste',methods:['GET','POST'])]
+    public function getPosts(PostRepository $postRepository, SerializerInterface $serializer): JsonResponse
+{
+    $posts = $postRepository->findAll();
+    return $this->json($posts, 200, [], ['groups' => 'posts']);
+}
+
+
     #[Route('/', name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository,Request $request): Response
+    public function index(PostRepository $postRepository,Request $request,PaginatorInterface $p): Response
     
     {
         $session = $request->getSession();
         $membre = $session->get('user');
     
         $popularPosts = $postRepository->findPopularPosts();
-
+        $popularPosts=$p->paginate($popularPosts,
+        $request->query->getInt('page',1),4);
         $recents = $postRepository
         ->createQueryBuilder('p')
         ->orderBy('p.date_Creation', 'DESC')
@@ -45,7 +113,6 @@ class PostController extends AbstractController
         ->getQuery()
         ->getResult();
 
-   
     
     
         return $this->render('post/index.html.twig', [
@@ -77,13 +144,13 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/search', name: 'app_post_search', methods: ['GET'])]
+    #[Route('/searc', name: 'app_post_searc', methods: ['GET'])]
    
     public function search(PostRepository $postRepository, Request $request): JsonResponse
     {
         $query = $request->query->get('q');
         $date = $request->query->get('date');
-        dump($query, $date);
+       // dump($query, $date);
     
         $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
         if ($dateObj === false) {
@@ -109,23 +176,15 @@ class PostController extends AbstractController
      
     
     #[Route('posts/{id}', name: 'app_post_singlepage', methods: ['GET','POST'])]
-    public function singlepage(Post $post,PostRepository $postRepository,Request $request, CommentaireRepository $commentaireRepository): Response
+    public function singlepage(Post $post,PostRepository $postRepository,Request $request, CommentaireRepository $commentaireRepository,Security $sec): Response
     {
 
-        $session= $request->getSession();
-        $membre=$session->get('user');
         $commentaire = new Commentaire();
-        $commentaire -> setPost($post);
-        $commentaire->setDate(new \DateTime());
-        //$commentaire->setMembre($membre);
-  
+        $membre=$sec->getUser();
+
         $formComm = $this->createForm(CommentaireType::class, $commentaire);
         $formComm->handleRequest($request);
-       /* $toxicity = $perspectiveApi->analyzeComment($commentaire->getText())['attributeScores']['TOXICITY']['summaryScore']['value'];
-
-        if ($toxicity > 0.8) {
-            return new Response('Commentaire inapproprié détecté.');
-        }*/
+     
         $httpClient = HttpClient::create();
         
         if ($formComm->isSubmitted() && $formComm->isValid() ) {
@@ -137,8 +196,9 @@ class PostController extends AbstractController
                     'content' => $content
                 ],
                 'headers' => [
-                    'User-ID' => 'kenyyy',
-                    'API-Key' => '5BHthd8cpOKbeLxvO3vzd81CAkU0arg4PlFP5SoB5RLtzNr9',
+                    'User-ID' => 'rrr',
+                    'API-Key' => '3b8j6yd1XZ8igQbWMznsJsb3OcBOswEg932B9qmZNyvDaz2d',
+                   
                 ]
             ]);
             if ($response->getStatusCode() === 200) {
@@ -149,11 +209,17 @@ class PostController extends AbstractController
                     return $this->redirectToRoute('app_post_singlepage', ['id' => $post->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
                 } else {
                     // Save comment
-                    $this->addFlash('success', 'Your comment has been posted successfully.');
-        
+                    $commentaire ->setPost($post);
+                    $commentaire->setDate(new \DateTime());
                     $commentaireRepository->save($commentaire, true);
+                    $this->addFlash('success', 'Your comment has been posted successfully.');
+                   
                     return $this->redirectToRoute('app_post_singlepage', ['id' => $post->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
                 }
+            } else {
+                // Handle API error
+                
+                return new Response("Error processing request", Response::HTTP_INTERNAL_SERVER_ERROR);
             } 
            
         }
@@ -267,122 +333,11 @@ class PostController extends AbstractController
             'posts' => $PostRepository->findAll(),
         ]);
     }
-    #[Route('/listeJson', name: 'app_post_liste', methods: ['GET'])]
-    public function getPosts(PostRepository $postRepository, SerializerInterface $serializer): Response
-{
-    $posts = $postRepository->findAll();
-    $json = $serializer->serialize($posts,'json',['groups' => 'posts']);
-    dump($json);
-    die;
-}
-   /* #[Route('/addJson', name: 'app_post_addJSON', methods: ['GET','POST'])]
-    public function addPosts(Request $request, SerializerInterface $serializer, EntityManagerInterface $em): Response
-    {
-        $content = $request->getContent();
-        $data = $serializer->deserialize($content,Post::class,'json');
-        $em->persist($data);
-        $em->flush();
-        return new Response("Post added successfully");
-    
-    }*/
-    #[Route('/addJson', name: 'app_post_addJSON', methods: ['GET','POST'])]
-    public function addPosts(Request $request, SerializerInterface $serializer, EntityManagerInterface $em): Response
-    {
-        $Post = new Post();
-        $theme = $request->query->get("theme");
-        $contenu=$request->query->get("contenu");
-        $nom=$request->query->get("nom");
-        $image=$request->query->get("image");
-        $nbr_Vue=$request->query->get("nbr_Vue");
-        $date = new \DateTime('now');
+   
 
-        $Post->setImage($image);
-        $Post->setTheme($theme);
-        $Post->setNom($nom);
-        $Post->setContenu($contenu);
-        $Post->setDateCreation($date);
 
-        $em->persist($Post);
-        $em->flush();
-
-        return $this->json($Post,200,[],['groups'=>'posts']);
-    }
-
-    #[Route("/comment/{id}/delete", name:'comment_delete')]
-    public function deleteComment(Commentaire $comment)
-{
-    
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->remove($comment);
-    $entityManager->flush();
-    $this->addFlash('success', 'Your comment was successfully deleted.');
-    return $this->redirectToRoute('app_post_singlepage', ['id' => $comment->getPost()->getId(),'redirected' => true]);
-}
-
-    #[Route("/{id}/updateComment", name:'comment_updat',methods: ['GET', 'POST'])]
-    public function updateComment(Commentaire $commentaire,Request $request,CommentaireRepository $commentaireRepository,Post $post)
-    {
-        $session = $request->getSession();
-        $membre = $session->get('user');
-
-        $formComm = $this->createForm(CommentaireType::class, $commentaire);
-        $formComm->handleRequest($request);
-       
-        $httpClient = HttpClient::create();
-        
-        if ($formComm->isSubmitted() && $formComm->isValid() ) {
-            // $commentaireRepository->save($commentaire, true);
-            //filter for bad words:
-            $content = $commentaire->getText();
-            $response = $httpClient->request('GET', 'https://neutrinoapi.net/bad-word-filter', [
-                'query' => [
-                    'content' => $content
-                ],
-                'headers' => [
-                    'User-ID' => 'kenyyy',
-                    'API-Key' => '5BHthd8cpOKbeLxvO3vzd81CAkU0arg4PlFP5SoB5RLtzNr9',
-                ]
-            ]);
-            if ($response->getStatusCode() === 200) {
-                $result = $response->toArray();
-                if ($result['is-bad']) {
-                    // Handle bad word found
-                    $this->addFlash('danger', 'Your comment contains inappropriate language and cannot be updated.');
-                    return $this->redirectToRoute('app_post_singlepage', ['id' => $commentaire->getPost()->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
-                } else {
-                    // Save comment
-                    $this->addFlash('success', 'Your comment has been updated successfully.');
-        
-                    $commentaireRepository->save($commentaire, true);
-                    return $this->redirectToRoute('app_post_singlepage', ['id' => $commentaire->getPost()->getId(),'redirected' => true], Response::HTTP_SEE_OTHER);
-                }
-            } 
-           
-        }
-        return $this->renderForm('post/editFrontComm.html.twig', [
-            'formComm' => $formComm,
-            'user' => $membre,
-        ]);
-    }
-
+   
   
-  /*  #[Route('/newComment', name: 'app_commentaire_new', methods: ['POST'])]
-    public function newComment(Request $request, CommentaireRepository $commentaireRepository): Response
-    {
-        $commentaire = new Commentaire();
-        $commentaire->setDate(new \DateTime());
-      //  $commentaire->setPost($post);
-        $formComm = $this->createForm(CommentaireType::class, $commentaire);
-        $formComm->handleRequest($request);
-        if ($formComm->isSubmitted() && $formComm->isValid()) {
-            $commentaireRepository->save($commentaire, true);
-            return $this->redirectToRoute('app_post_singlepage', [], Response::HTTP_SEE_OTHER);
-}
+  
 
-        return $this->render('post/singlepage.html.twig', [
-            'commentaire' => $commentaire,
-            'formComm' => $formComm,
-        ])
-
-}*/
 }
